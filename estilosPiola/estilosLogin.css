@@ -1,0 +1,225 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;900&display=swap");
+@font-face {
+  font-family: "FASolid";
+  src: url("../assets/font/fa6-solid-900.otf");
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+.iconoFA {
+  font-family: "FASolid";
+}
+
+body {
+  font-size: 16px;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  background: #159eee41;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+main {
+  width: 100%;
+  height: 85vh;
+}
+main video {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+main .overlay {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #00000096;
+  z-index: 1;
+}
+main .contenedorPrincipal {
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+main .contenedorPrincipal .columna {
+  z-index: 3;
+}
+main .contenedorPrincipal .columnaForm {
+  width: 45%;
+  height: 100%;
+  padding: 2em 4em;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5;
+  color: #474747;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.329);
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .cabeceraLogin {
+  text-align: center;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .contenido .contenedorFormulario {
+  max-width: 250px;
+  margin: 0 auto;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .contenido .contenedorFormulario form {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  margin: 1em 0 0 0;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .contenido .contenedorFormulario form input {
+  margin: 0.8em 0;
+  padding: 0.6em;
+  outline: none;
+  background: transparent;
+  color: #666666;
+  border: none;
+  border-bottom: 2px solid #046eab59;
+  font-size: 1em;
+  font-family: "Lato", sans-serif;
+  transition: all 0.5s ease;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .contenido .contenedorFormulario form .btnVerPwd{
+  color: #666666;
+  width: 10%;
+  border: none;
+  border-radius: 50%;
+  position: absolute;
+  right: 0;
+  bottom: 45%;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .contenido .contenedorFormulario form .btnVerPwd:hover {
+  background: #c5c5c5;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .contenido .contenedorFormulario form input:focus {
+  border-bottom: 2px solid #046eabd2;
+  color: #131313;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .contenido .contenedorFormulario form input[type=submit] {
+  cursor: pointer;
+  background: #046dab;
+  color: white;
+  padding: 0.6em;
+  border-radius: 10px;
+  transition: background 0.5s ease;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .contenido .contenedorFormulario form input[type=submit]:hover {
+  background: #03466d;
+}
+main .contenedorPrincipal .columnaForm .seccionLogin .contenido .contenedorError {
+  background: #c73434;
+  color: white;
+  max-width: 250px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0.4em;
+  border-radius: 10px;
+}
+main .contenedorPrincipal .columnaContent {
+  width: 55%;
+  height: 100%;
+  padding: 2em 4em;
+}
+main .contenedorPrincipal .columnaContent .seccionContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #464646;
+  border-radius: 10px;
+}
+main .contenedorPrincipal .columnaContent .seccionContent .cabeceraContent {
+  text-align: center;
+  margin: 0 0 2em 0;
+}
+main .contenedorPrincipal .columnaContent .seccionContent .cabeceraContent h2 {
+  color: #fff;
+  font-size: 3em;
+}
+main .contenedorPrincipal .columnaContent .seccionContent .contenedorContent p {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.719);
+  font-size: 1.4em;
+  line-height: 1.4em;
+}
+
+footer {
+  background: rgba(0, 0, 0, 0.445);
+  width: 100%;
+  height: 15vh;
+  position: relative;
+  z-index: 3;
+}
+footer .fila {
+  padding: 2em;
+  text-align: center;
+  color: white;
+}
+
+@media screen and (max-width: 950px) {
+  main {
+    height: auto;
+  }
+  main .contenedorPrincipal {
+    flex-direction: column-reverse;
+  }
+  main .contenedorPrincipal .columnaForm {
+    width: 100%;
+    padding: 2em 0 3em 0;
+  }
+  main .contenedorPrincipal .columnaForm .seccionLogin {
+    padding: 2em;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+  main .contenedorPrincipal .columnaContent {
+    width: 100%;
+    padding: 2em 0 0 0;
+  }
+  main .contenedorPrincipal .columnaContent .seccionContent .contenido {
+    display: none;
+  }
+
+  footer {
+    height: auto;
+  }
+}
+@media screen and (max-width: 480px) {
+  main .contenedorPrincipal .columnaContent {
+    width: 100%;
+  }
+  main .contenedorPrincipal .columnaContent .seccionContent .cabeceraContent h2 {
+    font-size: 2em;
+  }
+  main .contenedorPrincipal .columnaContent .seccionContent .contenido {
+    font-size: 0.8em;
+  }
+}
+
+/*# sourceMappingURL=estilosLogin.css.map */
