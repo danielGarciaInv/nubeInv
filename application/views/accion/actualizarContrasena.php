@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InvirtuaCloud | Recuperar Contraseña</title>
     <link rel="stylesheet" href="<?= base_url() ?>estilosPiola/estilosSignUp.css">
-    <link rel="shortcut icon" href="<?=base_url('assets/media/NubeInvirtual.png')?>">
+    <link rel="shortcut icon" href="<?=base_url('assets/media/logo.png')?>">
 </head>
 <body>
     <main>
