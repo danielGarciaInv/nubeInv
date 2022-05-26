@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     // Función mostrarCompleto: muestra el mensaje de completado. Se llama cuando la subida se completó
     function mostrarCompleto(event){
         indicadorPorc.innerHTML = "Completado";
-        window.location.reload();
+        //window.location.reload();
     }
 
     

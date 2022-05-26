@@ -75,9 +75,18 @@ class Dashboard extends CI_Controller {
         $categoria = $_POST['categoria'];
         $checkNotificar = $_POST['checkNotificar'];
         $checksCorreos = json_decode($_POST['checksCorreosArr']);
+        $charReservados = [" ","!","#","$","%","&","'","(",")","*","+",",","/",":",";","=","?","@","[","]"];
         foreach ($_FILES as $archivo) {
             $nombre = $archivo['name'];
             $extencion = substr($nombre,strrpos($nombre,".")+1);
+            $nombre = substr($nombre,0,strrpos($nombre,"."));
+
+            foreach ($charReservados as $character) {
+                $nombre = str_replace($character,"-",$nombre);
+            }
+            while(file_exists($directorio.$nombre.'.'.$extencion)){
+                $nombre .= '1';
+            }
 
             $tamanoKb = $archivo['size']*0.001;
             $fecha = date("d/m/Y");
@@ -93,7 +102,6 @@ class Dashboard extends CI_Controller {
 
             // Asignación de un numero en función de su tipo y su extención (Esto es para visualizar los iconos o las miniaturas)
             switch($tipoStr){
-                // Tipo imagen: descartados svg e ico para crear thumb, las demas extenciones tendran su miniatura
                 case 'image':
                     if($extencion == 'svg'||$extencion == 'ico'){
                         $tipo = 11;
@@ -101,19 +109,19 @@ class Dashboard extends CI_Controller {
                         $tipo = 1;
                     }
                     $cat = 'img';
-                    $nombre = 'Invirtual_image_'.$indice;
+                    // $nombre = 'Invirtual_image_'.$indice;
                 break;
                 // Tipo video: nada que reportar xd
                 case 'video':
                     $tipo = 2;
                     $cat = 'aud';
-                    $nombre = 'Invirtual_video_'.$indice;
+                    // $nombre = 'Invirtual_video_'.$indice;
                 break;
                 // Tipo audio: nada que reportar
                 case 'audio':
                     $tipo = 3;
                     $cat = 'aud';
-                    $nombre = 'Invirtual_audio_'.$indice;
+                    // $nombre = 'Invirtual_audio_'.$indice;
                 break;
                 // Tipo application: los candidatos a tener un icono especial de momento son pdf, archivos de office, sql y zip, los demas tendran un icono de archivo
                 case 'application':
@@ -121,32 +129,32 @@ class Dashboard extends CI_Controller {
                         case 'pdf':
                             // El tipo 41 tambien tendrá un enlace en su renderizado
                             $tipo = 41;
-                            $nombre = 'Invirtual_pdf_'.$indice;
+                            // $nombre = 'Invirtual_pdf_'.$indice;
                             break;
                         case 'docx':
                             $tipo = 42;
-                            $nombre = 'Invirtual_doc_'.$indice;
+                            // $nombre = 'Invirtual_doc_'.$indice;
                             break;
                         case 'pptx':
                             $tipo = 43;
-                            $nombre = 'Invirtual_slide_'.$indice;
+                            // $nombre = 'Invirtual_slide_'.$indice;
                             break;
                         case 'xlsx':
                             $tipo = 44;
-                            $nombre = 'Invirtual_sheet_'.$indice;
+                            // $nombre = 'Invirtual_sheet_'.$indice;
                             break;
                         case 'sql':
                             $tipo = 45;
-                            $nombre = 'Invirtual_db_'.$indice;
+                            // $nombre = 'Invirtual_db_'.$indice;
                             break;
                         case 'zip':
                         case 'rar':
                             $tipo = 46;
-                            $nombre = 'Invirtual_file_'.$indice;
+                            // $nombre = 'Invirtual_file_'.$indice;
                             break;
                         default:
                             $tipo = 6;
-                            $nombre = 'Invirtual_file_'.$indice;
+                            // $nombre = 'Invirtual_file_'.$indice;
                             break;
                     }
                     $cat = 'appl';
@@ -155,16 +163,19 @@ class Dashboard extends CI_Controller {
                 case 'text':
                     $tipo = 5;
                     $cat = 'appl';
-                    $nombre = 'Invirtual_text_'.$indice;
+                    // $nombre = 'Invirtual_text_'.$indice;
                 break;
                 // Demas: cualquier otro tipo que no haya sido asignado tendra un icono de archivo
                 default :
                     $tipo = 6;
                     $cat = 'appl';
-                    $nombre = 'Invirtual_file_'.$indice;
+                    // $nombre = 'Invirtual_file_'.$indice;
             }
             $nombre .= '.'.$extencion;
             $ruta = $directorio . $nombre;
+
+            var_dump($nombre);
+            var_dump($ruta);
 
             // Condicional para desplegar el tamaño en KB, en MB o en GB(ésta ya es la variable definitiva que se enviara a BD)
             if($tamanoKb>1000000.0){
@@ -227,6 +238,8 @@ class Dashboard extends CI_Controller {
         $categoria = $_POST['categoria'];
         $checkNotificar = $_POST['checkNotificar'];
         $checksCorreos = json_decode($_POST['checksCorreosArr']);
+        $charReservados = [" ","!","#","$","%","&","'","(",")","*","+",",","/",":",";","=","?","@","[","]"];
+
         for($i = 0; $i < count($_POST['folder']); $i++){
             $folder = dirname($_POST['folder'][$i]);
             
@@ -246,8 +259,17 @@ class Dashboard extends CI_Controller {
             $temp_file = $_FILES['file']['tmp_name'][$i];
             $nombre = $_FILES['file']['name'][$i];
             $extencion = substr($nombre,strrpos($nombre,".")+1);
+            $nombre = substr($nombre,0,strrpos($nombre,"."));
+
+
+            foreach ($charReservados as $character) {
+                $nombre = str_replace($character,"-",$nombre);
+            }
+            while(file_exists($path.$nombre.'.'.$extencion)){
+                $nombre .= '1';
+            }
+
             $tamanoKb = $_FILES['file']['size'][$i] * 0.001;
-            
             $fecha = date("d/m/Y");
             $tipoStr = $_FILES['file']['type'][$i];
             $tipoStr = substr($tipoStr,0,strpos($tipoStr,"/"));
@@ -266,19 +288,19 @@ class Dashboard extends CI_Controller {
                         $tipo = 1;
                     }
                     $cat = 'img';
-                    $nombre = 'Invirtual_image_'.$indice;
+                    // $nombre = 'Invirtual_image_'.$indice;
                 break;
                 // Tipo video: nada que reportar xd
                 case 'video':
                     $tipo = 2;
                     $cat = 'aud';
-                    $nombre = 'Invirtual_video_'.$indice;
+                    // $nombre = 'Invirtual_video_'.$indice;
                 break;
                 // Tipo audio: nada que reportar
                 case 'audio':
                     $tipo = 3;
                     $cat = 'aud';
-                    $nombre = 'Invirtual_audio_'.$indice;
+                    // $nombre = 'Invirtual_audio_'.$indice;
                 break;
                 // Tipo application: los candidatos a tener un icono especial de momento son pdf, archivos de office, sql y zip, los demas tendran un icono de archivo
                 case 'application':
@@ -286,32 +308,32 @@ class Dashboard extends CI_Controller {
                         case 'pdf':
                             // El tipo 41 tambien tendrá un enlace en su renderizado
                             $tipo = 41;
-                            $nombre = 'Invirtual_pdf_'.$indice;
+                            // $nombre = 'Invirtual_pdf_'.$indice;
                             break;
                         case 'docx':
                             $tipo = 42;
-                            $nombre = 'Invirtual_doc_'.$indice;
+                            // $nombre = 'Invirtual_doc_'.$indice;
                             break;
                         case 'pptx':
                             $tipo = 43;
-                            $nombre = 'Invirtual_slide_'.$indice;
+                            // $nombre = 'Invirtual_slide_'.$indice;
                             break;
                         case 'xlsx':
                             $tipo = 44;
-                            $nombre = 'Invirtual_sheet_'.$indice;
+                            // $nombre = 'Invirtual_sheet_'.$indice;
                             break;
                         case 'sql':
                             $tipo = 45;
-                            $nombre = 'Invirtual_db_'.$indice;
+                            // $nombre = 'Invirtual_db_'.$indice;
                             break;
                         case 'zip':
                         case 'rar':
                             $tipo = 46;
-                            $nombre = 'Invirtual_file_'.$indice;
+                            // $nombre = 'Invirtual_file_'.$indice;
                             break;
                         default:
                             $tipo = 6;
-                            $nombre = 'Invirtual_file_'.$indice;
+                            // $nombre = 'Invirtual_file_'.$indice;
                             break;
                     }
                     $cat = 'appl';
@@ -320,13 +342,13 @@ class Dashboard extends CI_Controller {
                 case 'text':
                     $tipo = 5;
                     $cat = 'appl';
-                    $nombre = 'Invirtual_text_'.$indice;
+                    // $nombre = 'Invirtual_text_'.$indice;
                 break;
                 // Demas: cualquier otro tipo que no haya sido asignado tendra un icono de archivo
                 default :
                     $tipo = 6;
                     $cat = 'appl';
-                    $nombre = 'Invirtual_file_'.$indice;
+                    // $nombre = 'Invirtual_file_'.$indice;
             }
             $nombre .= '.'.$extencion;
             $ruta = $path . '/' . $nombre;
