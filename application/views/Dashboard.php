@@ -7,67 +7,92 @@
             <section class="seccionDash">
                 <div class="fila">
                     <div class="columna menuDash">
-                        <h1><?= $tituloPagina?></h1>
+                        <div>
+                            <h1><?= $tituloPagina?></h1>
+                        </div>
                         <?php if($this->session->userdata('subir') === '1'){?>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSubir">
-                                Subir Archivo
-                            </button>
-                            <div class="modal fade" id="modalSubir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Subir Archivo</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="d-flex align-items-center">
+                                <a class="iconoFA fs-3" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalNuevaCarpeta"></a>
+                                <div class="modal fade" id="modalNuevaCarpeta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Nueva Carpeta</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="contFormSubida">
+                                                    <form method="POST" class="flex-column">
+                                                        <div class="d-flex flex-column justify-content-around mb-4">
+                                                            <label>Nombre: </label>
+                                                            <input type="text" class="form-control" id="nombreNuevaCarpeta" name="nombreNuevaCarpeta" required>
+                                                        </div>
+                                                        <input class="btnSubir mb-2" type="button" id="btnCrearCarpeta" name="btnCrearCarpeta" value="Crear">
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="modal-body">
-                                            <div class="contFormSubida">
-                                                <form method="POST" enctype="multipart/form-data" class="flex-column">
-                                                    <div class="d-flex flex-column flex-sm-row justify-content-around align-items-center">
-                                                        <div class="btnCargar d-inline-block">
-                                                            <input type="file" class="inpArchivo" id="inpArchivo" name="archivos[]" multiple required>
-                                                            <div class="puntoRojo" id="puntoRojo" style="display:none;"></div>
-                                                            <p class="m-0">Seleccionar Archivos</p>
-                                                        </div>
-                                                        <label class="">Ó</label>
-                                                        <div class="btnCargar d-inline-block">
-                                                            <input type="file" class="inpArchivo mt-2" id="inpCarpeta" name="carpetas[]" webkitdirectory required>
-                                                            <div class="puntoRojo" id="puntoRojoC" style="display:none;"></div>
-                                                            <p class="m-0">Seleccionar Carpeta</p>
-                                                        </div>
-                                                    </div>
-                                                    <label for="slctCat" class="btnCargar mb-2" >Categoria de Archivos:</label>
-                                                    <select class="form-select mb-4" aria-label="Default select example" name="slctCat" id="slctCat">
-                                                        <?php foreach($categorias as $filaCat){ if(in_array($filaCat['id'],$this->session->userdata('permisos'))){?> 
-                                                        <option value="<?= $filaCat['id']?>"><?= $filaCat['descripcion']?></option>
-                                                        <?php }}?>
-                                                    </select>
-
-                                                    <div class="btnNotificar mb-4">
-                                                        <div class="d-flex flex-row align-items-center">
-                                                            <input type="checkbox" id="checkNotificar" name="checkNotificar" checked >
-                                                            <label for="checkNotificar" class="mx-2">Notificar a los Usuarios por Correo</label>
-                                                        </div>
-                                                        <div class="bg-secondary bg-opacity-10 p-2 d-flex flex-column">
-                                                            <?php foreach($usuarios as $usuario){?>
-                                                                <div class="d-flex flex-row align-items-center">
-                                                                    <input class="checkCorreo" type="checkbox" id="checkNot<?= $usuario['idusuario']?>" name="checkNot<?= $usuario['idusuario']?>" value="<?= $usuario['correo'] ?>">
-                                                                    <label for="checkNot<?= $usuario['idusuario']?>" class="mx-2"><?= $usuario['correo'] ?></label>
-                                                                </div>
-                                                            <?php } ?>
-                                                            <div class="d-flex flex-row align-items-center mt-2">
-                                                                <input type="checkbox" id="checkNotTodos" name="checkNotTodos">
-                                                                <label for="checkNotTodos" class="mx-2">Enviar a Todos</label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalSubir">
+                                    Subir Archivo
+                                </button>
+                                <div class="modal fade" id="modalSubir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Subir Archivo</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="contFormSubida">
+                                                    <form method="POST" enctype="multipart/form-data" class="flex-column">
+                                                        <div class="d-flex flex-column flex-sm-row justify-content-around align-items-center">
+                                                            <div class="btnCargar d-inline-block">
+                                                                <input type="file" class="inpArchivo" id="inpArchivo" name="archivos[]" multiple required>
+                                                                <div class="puntoRojo" id="puntoRojo" style="display:none;"></div>
+                                                                <p class="m-0">Seleccionar Archivos</p>
+                                                            </div>
+                                                            <label class="">Ó</label>
+                                                            <div class="btnCargar d-inline-block">
+                                                                <input type="file" class="inpArchivo mt-2" id="inpCarpeta" name="carpetas[]" webkitdirectory required>
+                                                                <div class="puntoRojo" id="puntoRojoC" style="display:none;"></div>
+                                                                <p class="m-0">Seleccionar Carpeta</p>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <input class="btnSubir mb-2" type="button" id="btnSubir" name="btnSubir" value="Subir">
-                                                </form>
+                                                        <label for="slctCat" class="btnCargar mb-2" >Categoria de Archivos:</label>
+                                                        <select class="form-select mb-4" aria-label="Default select example" name="slctCat" id="slctCat">
+                                                            <?php foreach($categorias as $filaCat){ if(in_array($filaCat['id'],$this->session->userdata('permisos'))){?> 
+                                                            <option value="<?= $filaCat['id']?>"><?= $filaCat['descripcion']?></option>
+                                                            <?php }}?>
+                                                        </select>
+    
+                                                        <div class="btnNotificar mb-4">
+                                                            <div class="d-flex flex-row align-items-center">
+                                                                <input type="checkbox" id="checkNotificar" name="checkNotificar" checked >
+                                                                <label for="checkNotificar" class="mx-2">Notificar a los Usuarios por Correo</label>
+                                                            </div>
+                                                            <div class="bg-secondary bg-opacity-10 p-2 d-flex flex-column">
+                                                                <?php foreach($usuarios as $usuario){?>
+                                                                    <div class="d-flex flex-row align-items-center">
+                                                                        <input class="checkCorreo" type="checkbox" id="checkNot<?= $usuario['idusuario']?>" name="checkNot<?= $usuario['idusuario']?>" value="<?= $usuario['correo'] ?>">
+                                                                        <label for="checkNot<?= $usuario['idusuario']?>" class="mx-2"><?= $usuario['correo'] ?></label>
+                                                                    </div>
+                                                                <?php } ?>
+                                                                <div class="d-flex flex-row align-items-center mt-2">
+                                                                    <input type="checkbox" id="checkNotTodos" name="checkNotTodos">
+                                                                    <label for="checkNotTodos" class="mx-2">Enviar a Todos</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <input class="btnSubir mb-2" type="button" id="btnSubir" name="btnSubir" value="Subir">
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
                         <?php }?>
                     </div>
                 </div>

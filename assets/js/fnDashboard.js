@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     var preVisualizador = document.getElementById('preVisualizador');
     var btnCerrarPrev = document.getElementById('btnCerrarPrev');
     var btnSubir = document.getElementById('btnSubir');
+    var btnCrearCarpeta = document.getElementById('btnCrearCarpeta');
     var indicadorPorc = document.getElementById('indicadorPorc');
     var infosArchivo = document.getElementsByClassName('infoArchivo');
     var derPrev = document.getElementById('derPrev');
@@ -132,6 +133,15 @@ document.addEventListener('DOMContentLoaded',()=>{
         }
     }
 
+    function crearCarpeta(){
+        let formData = new FormData();
+        formData.append('nombreNuevaCarpeta',nombreNuevaCarpeta.value);
+        fetch(`${url}index.php/Dashboard/nuevaCarpeta`,{
+            method: 'POST',
+            body: formData
+        }).then(r => r.text()).then(res => window.location.reload());
+    }
+
     // Función mostrarProgreso: recibe el estatus del progreso y en base a ello modifica el ancho de la barra
     function mostrarProgreso(event){
         var porcentaje = parseInt(event.loaded / event.total * 100);
@@ -142,7 +152,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     // Función mostrarCompleto: muestra el mensaje de completado. Se llama cuando la subida se completó
     function mostrarCompleto(event){
         indicadorPorc.innerHTML = "Completado";
-        //window.location.reload();
+        window.location.reload();
     }
 
     
@@ -226,6 +236,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     // Llamada a la función subirArchivos
     btnSubir.addEventListener('click',()=>{
         subirArchivos();
+    });
+
+    // Llamada a la función crearCarpeta
+    btnCrearCarpeta.addEventListener('click',()=>{
+        crearCarpeta();
     });
 
     // Escucha al input checkNotTodos para marcar todos los correos como seleccionados

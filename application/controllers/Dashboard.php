@@ -404,6 +404,24 @@ class Dashboard extends CI_Controller {
         }
     }
 
+
+// ------------------------------------------- Función crear nueva carpeta
+    public function nuevaCarpeta(){
+        $directorio = $this->session->userdata('dirActual');
+        $nombreCarpeta = $_POST['nombreNuevaCarpeta'];
+        $path = $directorio . $nombreCarpeta;
+            
+        if(!file_exists($path)){
+            mkdir($path, 0775, true);
+            // -------------------------------------------------------- Funcion para registrar carpeta en BD
+            $this->DashboardDB->registrarCarpeta($nombreCarpeta, $path);
+            echo "true";
+        }else{
+            echo "false";
+        }
+    }
+
+
 /*
  ---------------------------------------------- Función crearThumb
  Función para crear las miniaturas de las imagenes con la libreria image_lib de CI
@@ -472,7 +490,7 @@ class Dashboard extends CI_Controller {
         array_shift($ficheros);
         foreach ($ficheros as $elemento) {
             if(!is_dir($directorio.$elemento)){
-                array_push($archivosScan,$elemento);
+                array_push($archivosScan,$directorio.$elemento);
             }
         }
 
@@ -480,7 +498,7 @@ class Dashboard extends CI_Controller {
         $archivosPrev = $this->DashboardDB->devolverArchivos();
         while($fila = mysqli_fetch_array($archivosPrev)){
             if(in_array($fila['id_categoria'],$this->session->userdata('permisos'))){
-                if(in_array($fila['nombre'],$archivosScan)){
+                if(in_array($fila['ruta'],$archivosScan)){
                     array_push($archivos, $fila);
                 }
             }
@@ -536,15 +554,15 @@ class Dashboard extends CI_Controller {
             array_shift($ficheros);
             array_shift($ficheros);
             foreach ($ficheros as $elemento) {
-                if(!is_dir($directorio.$elemento)){
-                    array_push($archivosScan,$elemento);
+                if(!is_dir($directorio.'/'.$elemento)){
+                    array_push($archivosScan,$directorio.'/'.$elemento);
                 }
             }
             
             $archivosPrev = $this->DashboardDB->devolverArchivos();
             while($fila = mysqli_fetch_array($archivosPrev)){
                 if(in_array($fila['id_categoria'],$this->session->userdata('permisos'))){
-                    if(in_array($fila['nombre'],$archivosScan)){
+                    if(in_array($fila['ruta'],$archivosScan)){
                         array_push($archivos, $fila);
                     }
                 }
