@@ -14,9 +14,28 @@ class Dashboard extends CI_Controller {
 
 	public function index(){
 		$this->validarTmpUsrs();
-
         if($this->session->userdata('correo')){
-            $cont['archivos'] = $this->mostrarArchivos();
+            if(empty($_REQUEST["pag"]) || $_REQUEST["pag"] == "" || !isset($_REQUEST["pag"])){
+                $_REQUEST["pag"] = '1';
+            }else{
+                $_REQUEST["pag"] = $_REQUEST["pag"];
+            }
+            $pagina = $_REQUEST["pag"];
+            $limite = '15';
+
+            if(is_numeric($pagina)){
+                $inicio = ($pagina-1) * $limite;
+            }
+            else{
+                $inicio = 0;
+            }
+
+            $contenido = $this->mostrarArchivos($inicio, $limite);
+            $totalArchivos = $contenido['totalArchivos'];
+            $archivos = $contenido['archivos'];
+            $paginas=ceil($totalArchivos/$limite);
+            
+            $cont['archivos'] = $archivos;
             $cont['folders'] = $this->escanearFolders("cargados/");
             if($this->session->userdata('rol') === '1'){
                 $cont['roles'] = $this->consultaRoles();
@@ -25,6 +44,10 @@ class Dashboard extends CI_Controller {
             $cont['categorias'] = $this->mostrarCategorias();
             $cont['usuarios'] = $this->mostrarUsuarios();
             $cont['tituloPagina'] = 'Mi Dashboard';
+            $cont['pagina'] = $pagina;
+            $cont['totalArchivos'] = $totalArchivos;
+            $cont['limite'] = $limite;
+            $cont['paginas'] = $paginas;
             $this->session->set_userdata('dirActual','cargados/');
             $this->load->view('comun/head',$cont);
             $this->load->view('Dashboard',$cont);
@@ -482,7 +505,7 @@ class Dashboard extends CI_Controller {
     }
 
     // Función mostrarArchivos devuelve una respuesta de tipo mysqli
-    public function mostrarArchivos(){
+    public function mostrarArchivos($inicio, $limite){
         $archivosScan = [];
         $directorio = "cargados/";
         $ficheros = scandir($directorio);
@@ -495,7 +518,7 @@ class Dashboard extends CI_Controller {
         }
 
         $archivos = [];
-        $archivosPrev = $this->DashboardDB->devolverArchivos();
+        $archivosPrev = $this->DashboardDB->devolverArchivosLimit($inicio, $limite);
         while($fila = mysqli_fetch_array($archivosPrev)){
             if(in_array($fila['id_categoria'],$this->session->userdata('permisos'))){
                 if(in_array($fila['ruta'],$archivosScan)){
@@ -503,7 +526,8 @@ class Dashboard extends CI_Controller {
                 }
             }
         }
-        return $archivos;
+        $totalArchivos = count($archivosScan);
+        return ['archivos' => $archivos,'totalArchivos' => $totalArchivos];
     }
 
     public function escanearFolders($ruta){

@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     /* ------------------------------------- Puestas en marcha cuando carga la página ------------------------------------------ */
 
     // Llamada asincrona para obtener los datos de los archivos de BD
-    fetch(`${url}index.php/Dashboard/mostrarArchivosAs`,{
+    /* fetch(`${url}index.php/Dashboard/mostrarArchivosAs`,{
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         return respuesta.json();
     }).then((res)=>{
         datosArchivo = res;
-    });
+    }); */
 
 
     /* ------------------------------------- Funciones ------------------------------------------ */
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     // Escucha a cada boton de previsualizacion para activar el prev y establecer la posición inicial con la funcion setPos
-    for (let btnPre of btnsPrev) {
+    /* for (let btnPre of btnsPrev) {
         btnPre.addEventListener('click',()=>{
             for (let elemento of datosArchivo) {
                 if(elemento.id == btnPre.id && elemento.tipo == '1'){
@@ -186,10 +186,10 @@ document.addEventListener('DOMContentLoaded',()=>{
                 }
             }
         });
-    }
+    } */
 
     // Escucha a los trigers de derecha e izquierda respectivamente para hacer el desplazamiento
-    derPrev.addEventListener('click',()=>{
+    /* derPrev.addEventListener('click',()=>{
         for (let imgPrev of contenedorMedia.children) {
             imgPrev.style.display = 'none';
         }
@@ -212,15 +212,15 @@ document.addEventListener('DOMContentLoaded',()=>{
             contenedorMedia.children[pos-1].style.display = 'block';
             pos--;
         }
-    });
+    }); */
 
     // Escucha al botón para cerrar el previsualizador, lo oculta y a todas sus imagenes hijas tambien
-    btnCerrarPrev.addEventListener('click',()=>{
+    /* btnCerrarPrev.addEventListener('click',()=>{
         for (let imgPrev of contenedorMedia.children) {
             imgPrev.style.display = 'none';
         }
         preVisualizador.style.display = "none";
-    });
+    }); */
 
     // ----------------------- Para la subida "Asincrona"
     // Escucha al input de tipo file, cuando tenga archivos seleccionados se mostrará el punto rojo.

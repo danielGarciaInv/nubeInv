@@ -202,6 +202,36 @@
                                 </div>
                             <?php }?>
                         </div>
+
+                        <?php if(isset($pagina)){?>
+                        <div class="container-fluid  col-12">
+                            <ul class="pagination pg-dark justify-content-center pb-5 pt-5 mb-0" style="float: none;" >
+                                <li class="page-item">
+                                <?php
+                                if($_REQUEST["pag"] == "1" ){
+                                    $_REQUEST["pag"] == "0";
+                                    echo  "";
+                                }else{
+                                    if ($pagina>1)
+                                    $ant = $_REQUEST["pag"] - 1;
+                                ?>                                    
+                                    <a class="page-link" aria-label="Previous" href="<?= base_url('index.php/Dashboard?pag=1')?>"><span aria-hidden='true'>&laquo;</span></a>
+                                    <li class="page-item"><a class="page-link" href="<?= base_url('index.php/Dashboard?pag='. ($pagina-1) )?>"><?=$ant?></a></li>
+                                <?php } ?>
+                                <li class='page-item active'><a class='page-link'><?= $_REQUEST["pag"] ?></a></li>
+                                <?php
+                                $sigui = $_REQUEST["pag"] + 1;
+                                $ultima = $totalArchivos / $limite;
+                                if ($ultima == $_REQUEST["pag"] +1 ){
+                                    $ultima == "";
+                                }
+                                if ($pagina<$paginas && $paginas>1){?>
+                                <li class="page-item"><a class="page-link" href="<?=base_url('index.php/Dashboard?pag='.($pagina+1))?>"><?=$sigui?></a></li>
+                                <li class="page-item"><a class="page-link" aria-label="Next" href="<?=base_url('index.php/Dashboard?pag='.ceil($ultima))?>"><span aria-hidden='true'>&raquo;</span></a></li>
+                                <?php }?>
+                            </ul>
+                        </div>
+                        <?php }?>
                     </div>
                 </div>
             </section>

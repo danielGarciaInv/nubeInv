@@ -14,7 +14,7 @@ class DashboardDB extends CI_model{
     }
 
     public function registrarCarpeta($nombre, $path){
-        return $this->db->insert('carpeta',['nombre'=>$nombre, 'ruta'=>$path]);
+        return $this->db->query("INSERT INTO carpeta VALUES (NULL,'$nombre','$path');");
     }
 
     public function eliminarArchivo($ruta){
@@ -27,6 +27,11 @@ class DashboardDB extends CI_model{
 
     public function devolverArchivos(){
         $consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado ORDER BY id DESC;");
+        return $consultaArchivos->result_id;
+    }
+
+    public function devolverArchivosLimit($inicio, $limite){
+        $consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado WHERE ruta NOT LIKE 'cargados/%/%' ORDER BY id DESC LIMIT $inicio,$limite");
         return $consultaArchivos->result_id;
     }
 
