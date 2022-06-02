@@ -10,9 +10,32 @@
                         <div>
                             <h1><?= $tituloPagina?></h1>
                         </div>
-                        <?php if($this->session->userdata('subir') === '1'){?>
                             <div class="d-flex align-items-center">
-                                <a class="iconoFA fs-3" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalNuevaCarpeta"></a>
+                                <a class="iconoFA fs-4 text-muted" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalBuscar"></a>
+                                <div class="modal fade" id="modalBuscar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Buscar</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="contFormSubida">
+                                                    <form method="GET" action="<?= base_url('index.php/Dashboard/busqueda') ?>" class="flex-column">
+                                                        <div class="d-flex flex-column justify-content-around mb-4">
+                                                            <label>Ingresar nombre o palabra clave: </label>
+                                                            <input type="text" class="form-control" id="busqueda" name="busqueda">
+                                                        </div>
+                                                        <input class="w-100 bg-primary text-white text-bold p-2 rounded-3 border-0" type="submit" id="btnBuscar" name="btnBuscar" value="Buscar">
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <?php if($this->session->userdata('subir') === '1'){?>
+                                <a class="iconoFA fs-3 ms-2" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalNuevaCarpeta"></a>
                                 <div class="modal fade" id="modalNuevaCarpeta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -34,6 +57,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalSubir">
                                     Subir Archivo
                                 </button>
@@ -92,8 +116,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                <?php }?>
                             </div>
-                        <?php }?>
                     </div>
                 </div>
                 <?php if($this->session->userdata('subir') === '1'){?>

@@ -504,6 +504,62 @@ class Dashboard extends CI_Controller {
         rmdir($ruta);
     }
 
+    // Función para buscar archivos y carpetas
+    public function busqueda(){
+        if($this->session->userdata('correo')){
+            $keyword = $_GET['busqueda'];
+            $archivos = [];
+            $carpetas = [];
+            if(empty($_REQUEST["pag"]) || $_REQUEST["pag"] == "" || !isset($_REQUEST["pag"])){
+                $_REQUEST["pag"] = '1';
+            }else{
+                $_REQUEST["pag"] = $_REQUEST["pag"];
+            }
+            $pagina = $_REQUEST["pag"];
+            $limite = '15';
+            
+            if(is_numeric($pagina)){
+                $inicio = ($pagina-1) * $limite;
+            }
+            else{
+                $inicio = 0;
+            }
+            $busquedaArchivos = $this->DashboardDB->buscarArchivos($keyword, $inicio, $limite);
+            $busquedaCarpetas = $this->DashboardDB->buscarCarpetas($keyword, $inicio, $limite);
+            while($fila = mysqli_fetch_array($busquedaArchivos)){
+                if(in_array($fila['id_categoria'],$this->session->userdata('permisos'))){
+                    array_push($archivos, $fila);
+                }
+            }
+            while($fila = mysqli_fetch_array($busquedaCarpetas)){
+                array_push($carpetas, $fila);
+            }
+            
+            $totalArchivos = count($archivos);
+            $paginas=ceil($totalArchivos/$limite);
+            
+            $cont['archivos'] = $archivos;
+            $cont['folders'] = $carpetas;
+            if($this->session->userdata('rol') === '1'){
+                $cont['roles'] = $this->consultaRoles();
+            }
+            
+            $cont['categorias'] = $this->mostrarCategorias();
+            $cont['usuarios'] = $this->mostrarUsuarios();
+            $cont['tituloPagina'] = 'Resultados de Busqueda';
+            $cont['pagina'] = $pagina;
+            $cont['totalArchivos'] = $totalArchivos;
+            $cont['limite'] = $limite;
+            $cont['paginas'] = $paginas;
+            $this->session->set_userdata('dirActual','cargados/');
+            $this->load->view('comun/head',$cont);
+            $this->load->view('Dashboard',$cont);
+            $this->load->view('comun/footer');
+        }else{
+            redirect('Login');
+        }
+    }
+
     // Función mostrarArchivos devuelve una respuesta de tipo mysqli
     public function mostrarArchivos($inicio, $limite){
         $archivosScan = [];
@@ -518,7 +574,7 @@ class Dashboard extends CI_Controller {
         }
 
         $archivos = [];
-        $archivosPrev = $this->DashboardDB->devolverArchivosLimit($inicio, $limite);
+        $archivosPrev = $this->DashboardDB->devolverArchivosLimitRaiz($inicio, $limite);
         while($fila = mysqli_fetch_array($archivosPrev)){
             if(in_array($fila['id_categoria'],$this->session->userdata('permisos'))){
                 if(in_array($fila['ruta'],$archivosScan)){

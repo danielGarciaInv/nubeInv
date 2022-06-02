@@ -31,6 +31,11 @@ class DashboardDB extends CI_model{
     }
 
     public function devolverArchivosLimit($inicio, $limite){
+        $consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado ORDER BY id DESC LIMIT $inicio,$limite");
+        return $consultaArchivos->result_id;
+    }
+
+    public function devolverArchivosLimitRaiz($inicio, $limite){
         $consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado WHERE ruta NOT LIKE 'cargados/%/%' ORDER BY id DESC LIMIT $inicio,$limite");
         return $consultaArchivos->result_id;
     }
@@ -108,6 +113,14 @@ class DashboardDB extends CI_model{
     public function usuariosCorreo($id_cat){
         $correos = $this->db->query("SELECT u.correo FROM usuario u INNER JOIN rol r ON u.id_rol = r.id INNER JOIN rol_ve_categoria rvc ON r.id = rvc.id_rol WHERE rvc.id_cat = '$id_cat'");
         return $correos->result();
+    }
+    public function buscarArchivos($key, $inicio, $limite){
+        $resultado = $this->db->query("SELECT * FROM archivo_cargado WHERE nombre LIKE LOWER('%$key%') LIMIT $inicio,$limite;");
+        return $resultado->result_id;
+    }
+    public function buscarCarpetas($key){
+        $resultado = $this->db->query("SELECT * FROM carpeta WHERE nombre LIKE LOWER('%$key%');");
+        return $resultado->result_id;
     }
 }
 ?>
