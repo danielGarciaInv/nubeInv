@@ -29,8 +29,18 @@ class Dashboard extends CI_Controller {
             else{
                 $inicio = 0;
             }
+            if(empty($_REQUEST["tamano"]) || $_REQUEST["tamano"] == "" || !isset($_REQUEST["tamano"])){
+                $_REQUEST["tamano"] = 2048;
+            }else{
+                $_REQUEST["tamano"] = $_REQUEST["tamano"];
+            }
+            if(empty($_REQUEST["orden"]) || $_REQUEST["orden"] == "" || !isset($_REQUEST["orden"])){
+                $_REQUEST["orden"] = 'DESC';
+            }else{
+                $_REQUEST["orden"] = $_REQUEST["orden"];
+            }
 
-            $contenido = $this->mostrarArchivos($inicio, $limite);
+            $contenido = $this->mostrarArchivos($inicio, $limite, $_REQUEST["tamano"], $_REQUEST["orden"]);
             $totalArchivos = $contenido['totalArchivos'];
             $archivos = $contenido['archivos'];
             $paginas=ceil($totalArchivos/$limite);
@@ -48,6 +58,7 @@ class Dashboard extends CI_Controller {
             $cont['totalArchivos'] = $totalArchivos;
             $cont['limite'] = $limite;
             $cont['paginas'] = $paginas;
+            $cont['filtro'] = true;
             $this->session->set_userdata('dirActual','cargados/');
             $this->load->view('comun/head',$cont);
             $this->load->view('Dashboard',$cont);
@@ -561,7 +572,7 @@ class Dashboard extends CI_Controller {
     }
 
     // Función mostrarArchivos devuelve una respuesta de tipo mysqli
-    public function mostrarArchivos($inicio, $limite){
+    public function mostrarArchivos($inicio, $limite, $tamanoMax, $orden){
         $archivosScan = [];
         $directorio = "cargados/";
         $ficheros = scandir($directorio);
@@ -574,7 +585,7 @@ class Dashboard extends CI_Controller {
         }
 
         $archivos = [];
-        $archivosPrev = $this->DashboardDB->devolverArchivosLimitRaiz($inicio, $limite);
+        $archivosPrev = $this->DashboardDB->devolverArchivosFiltro($inicio, $limite, $tamanoMax, $orden);
         while($fila = mysqli_fetch_array($archivosPrev)){
             if(in_array($fila['id_categoria'],$this->session->userdata('permisos'))){
                 if(in_array($fila['ruta'],$archivosScan)){

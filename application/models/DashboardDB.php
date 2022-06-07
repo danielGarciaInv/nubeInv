@@ -55,6 +55,11 @@ class DashboardDB extends CI_model{
         return $consultaArchivos->result_id;
     }
 
+    public function devolverArchivosFiltro($inicio, $limite, $tamanoMax, $orden){
+        $resultado = $this->db->query("SELECT * FROM archivo_cargado WHERE ruta NOT LIKE 'cargados/%/%' AND ((tamano LIKE '%GB' AND REPLACE(tamano,' GB','') < $tamanoMax/1000) OR (tamano LIKE '%MB' AND REPLACE(tamano,' MB','') < $tamanoMax) OR (tamano LIKE '%KB' AND REPLACE(tamano,' KB','') < $tamanoMax*1000)) ORDER BY id $orden LIMIT $inicio,$limite");
+        return $resultado->result_id;
+    }
+
     public function devolverArchivo($id){
         $consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado WHERE id = '$id';");
         return $consultaArchivos->result();
@@ -85,42 +90,57 @@ class DashboardDB extends CI_model{
         $consultaArchivos = $consultaArchivos->result();
         return $consultaArchivos;
     }
+
     public function consultaCategorias(){
         $resultado = $this->db->query("SELECT * FROM categoria;");
         return $resultado->result_id;
     }
+
     public function eliminarPermisosCat($id_cat){
         return $this->db->query("DELETE FROM rol_ve_categoria WHERE id_cat = '$id_cat'");
     }
+
     public function consultaPermisos(){
         $resultado = $this->db->query("SELECT * FROM rol_ve_categoria;");
         return $resultado->result_id;
     }
+
     public function actualizarCategoria($id, $descripcion){
         return $this->db->query("UPDATE categoria SET descripcion = '$descripcion' WHERE id = '$id';");
     }
+
     public function registrarCategoria($descripcion){
         $this->db->query("INSERT INTO categoria VALUES(NULL,'$descripcion');");
         $this->db->query("INSERT INTO rol_ve_categoria VALUES(1,(SELECT MAX(id) FROM categoria));");
     }
+
     public function archPorcat($idcat){
         $resultado = $this->db->query("SELECT * FROM categoria INNER JOIN archivo_cargado ON categoria.id = archivo_cargado.id_categoria WHERE categoria.id = '$idcat';");
         return $resultado;
     }
+
     public function eliminarCategoria($id){
         return $this->db->query("DELETE FROM categoria WHERE id = '$id'");
     }
+
     public function usuariosCorreo($id_cat){
         $correos = $this->db->query("SELECT u.correo FROM usuario u INNER JOIN rol r ON u.id_rol = r.id INNER JOIN rol_ve_categoria rvc ON r.id = rvc.id_rol WHERE rvc.id_cat = '$id_cat'");
         return $correos->result();
     }
+
     public function buscarArchivos($key, $inicio, $limite){
         $resultado = $this->db->query("SELECT * FROM archivo_cargado WHERE nombre LIKE LOWER('%$key%') LIMIT $inicio,$limite;");
         return $resultado->result_id;
     }
+
     public function buscarCarpetas($key){
         $resultado = $this->db->query("SELECT * FROM carpeta WHERE nombre LIKE LOWER('%$key%');");
         return $resultado->result_id;
+    }
+
+    public function tamanoMaximo($unidad, $path){
+        $resultado = $this->db->query("SELECT MAX(tamano) maximo FROM archivo_cargado WHERE tamano LIKE '%$unidad' AND ruta NOT LIKE '$path%/%'");
+        return $resultado->result();
     }
 }
 ?>

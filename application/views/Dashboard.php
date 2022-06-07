@@ -6,118 +6,148 @@
         <div class="contenedorPrincipal">
             <section class="seccionDash">
                 <div class="fila">
-                    <div class="columna menuDash">
-                        <div>
-                            <h1><?= $tituloPagina?></h1>
-                        </div>
-                            <div class="d-flex align-items-center">
-                                <a class="iconoFA fs-4 text-muted" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalBuscar"></a>
-                                <div class="modal fade" id="modalBuscar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Buscar</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="contFormSubida">
-                                                    <form method="GET" action="<?= base_url('index.php/Dashboard/busqueda') ?>" class="flex-column">
-                                                        <div class="d-flex flex-column justify-content-around mb-4">
-                                                            <label>Ingresar nombre o palabra clave: </label>
-                                                            <input type="text" class="form-control" id="busqueda" name="busqueda">
-                                                        </div>
-                                                        <input class="w-100 bg-primary text-white text-bold p-2 rounded-3 border-0" type="submit" id="btnBuscar" name="btnBuscar" value="Buscar">
-                                                    </form>
-                                                </div>
-                                            </div>
+                    <div class="menuDash d-flex flex-column-reverse flex-md-row justify-content-center justify-content-md-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <h1 class="mt-4 mt-md-2"><?= $tituloPagina?></h1>
+                            <?php if(isset($filtro)){?>
+                            <a class="iconoFA fs-4 ms-2 mt-4 mt-md-0" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalFiltro"></a>
+                            <div class="modal fade" id="modalFiltro" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Aplicar Filtro</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <?php if($this->session->userdata('subir') === '1'){?>
-                                <a class="iconoFA fs-3 ms-2" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalNuevaCarpeta"></a>
-                                <div class="modal fade" id="modalNuevaCarpeta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Nueva Carpeta</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="contFormSubida">
-                                                    <form method="POST" class="flex-column">
-                                                        <div class="d-flex flex-column justify-content-around mb-4">
-                                                            <label>Nombre: </label>
-                                                            <input type="text" class="form-control" id="nombreNuevaCarpeta" name="nombreNuevaCarpeta" required>
-                                                        </div>
-                                                        <input class="btnSubir mb-2" type="button" id="btnCrearCarpeta" name="btnCrearCarpeta" value="Crear">
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalSubir">
-                                    Subir Archivo
-                                </button>
-                                <div class="modal fade" id="modalSubir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Subir Archivo</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="contFormSubida">
-                                                    <form method="POST" enctype="multipart/form-data" class="flex-column">
-                                                        <div class="d-flex flex-column flex-sm-row justify-content-around align-items-center">
-                                                            <div class="btnCargar d-inline-block">
-                                                                <input type="file" class="inpArchivo" id="inpArchivo" name="archivos[]" multiple required>
-                                                                <div class="puntoRojo" id="puntoRojo" style="display:none;"></div>
-                                                                <p class="m-0">Seleccionar Archivos</p>
-                                                            </div>
-                                                            <label class="">Ó</label>
-                                                            <div class="btnCargar d-inline-block">
-                                                                <input type="file" class="inpArchivo mt-2" id="inpCarpeta" name="carpetas[]" webkitdirectory required>
-                                                                <div class="puntoRojo" id="puntoRojoC" style="display:none;"></div>
-                                                                <p class="m-0">Seleccionar Carpeta</p>
-                                                            </div>
-                                                        </div>
-                                                        <label for="slctCat" class="btnCargar mb-2" >Categoria de Archivos:</label>
-                                                        <select class="form-select mb-4" aria-label="Default select example" name="slctCat" id="slctCat">
-                                                            <?php foreach($categorias as $filaCat){ if(in_array($filaCat['id'],$this->session->userdata('permisos'))){?> 
-                                                            <option value="<?= $filaCat['id']?>"><?= $filaCat['descripcion']?></option>
-                                                            <?php }}?>
+                                        <div class="modal-body">
+                                            <div class="contFormSubida">
+                                                <form method="GET" action="<?= base_url('index.php/Dashboard') ?>" class="flex-column">
+                                                    <div class="d-flex flex-column justify-content-around mb-4">
+                                                        <label>Tamaño Máximo</label>
+                                                        <input type="range" min="1" max="2048" value="2048" step="4" name="tamano" id="tamano">
+                                                        <label for="tamano">2048 MB</label>
+                                                        <select class="form-select mt-4" name="orden">
+                                                            <option value="">Ordenar Por:</option>
+                                                            <option value="ASC">Más antiguos</option>
+                                                            <option value="DESC">Más recientes</option>
                                                         </select>
-    
-                                                        <div class="btnNotificar mb-4">
-                                                            <div class="d-flex flex-row align-items-center">
-                                                                <input type="checkbox" id="checkNotificar" name="checkNotificar" checked >
-                                                                <label for="checkNotificar" class="mx-2">Notificar a los Usuarios por Correo</label>
-                                                            </div>
-                                                            <div class="bg-secondary bg-opacity-10 p-2 d-flex flex-column">
-                                                                <?php foreach($usuarios as $usuario){?>
-                                                                    <div class="d-flex flex-row align-items-center">
-                                                                        <input class="checkCorreo" type="checkbox" id="checkNot<?= $usuario['idusuario']?>" name="checkNot<?= $usuario['idusuario']?>" value="<?= $usuario['correo'] ?>">
-                                                                        <label for="checkNot<?= $usuario['idusuario']?>" class="mx-2"><?= $usuario['correo'] ?></label>
-                                                                    </div>
-                                                                <?php } ?>
-                                                                <div class="d-flex flex-row align-items-center mt-2">
-                                                                    <input type="checkbox" id="checkNotTodos" name="checkNotTodos">
-                                                                    <label for="checkNotTodos" class="mx-2">Enviar a Todos</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <input class="btnSubir mb-2" type="button" id="btnSubir" name="btnSubir" value="Subir">
-                                                    </form>
-                                                </div>
+                                                    </div>
+                                                    <input class="w-100 bg-primary text-white text-bold p-2 rounded-3 border-0" type="submit" value="Aplicar">
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <?php }?>
                             </div>
+                            <?php }?>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <a class="iconoFA fs-4" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalBuscar"></a>
+                            <div class="modal fade" id="modalBuscar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Buscar</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="contFormSubida">
+                                                <form method="GET" action="<?= base_url('index.php/Dashboard/busqueda') ?>" class="flex-column">
+                                                    <div class="d-flex flex-column justify-content-around mb-4">
+                                                        <label>Ingresar nombre o palabra clave: </label>
+                                                        <input type="text" class="form-control" id="busqueda" name="busqueda">
+                                                    </div>
+                                                    <input class="w-100 bg-primary text-white text-bold p-2 rounded-3 border-0" type="submit" value="Buscar">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <?php if($this->session->userdata('subir') === '1'){?>
+                            <a class="iconoFA fs-3 ms-2" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalNuevaCarpeta"></a>
+                            <div class="modal fade" id="modalNuevaCarpeta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Nueva Carpeta</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="contFormSubida">
+                                                <form method="POST" class="flex-column">
+                                                    <div class="d-flex flex-column justify-content-around mb-4">
+                                                        <label>Nombre: </label>
+                                                        <input type="text" class="form-control" id="nombreNuevaCarpeta" name="nombreNuevaCarpeta" required>
+                                                    </div>
+                                                    <input class="btnSubir mb-2" type="button" id="btnCrearCarpeta" name="btnCrearCarpeta" value="Crear">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalSubir">
+                                Subir Archivo
+                            </button>
+                            <div class="modal fade" id="modalSubir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Subir Archivo</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="contFormSubida">
+                                                <form method="POST" enctype="multipart/form-data" class="flex-column">
+                                                    <div class="d-flex flex-column flex-sm-row justify-content-around align-items-center">
+                                                        <div class="btnCargar d-inline-block">
+                                                            <input type="file" class="inpArchivo" id="inpArchivo" name="archivos[]" multiple required>
+                                                            <div class="puntoRojo" id="puntoRojo" style="display:none;"></div>
+                                                            <p class="m-0">Seleccionar Archivos</p>
+                                                        </div>
+                                                        <label class="">Ó</label>
+                                                        <div class="btnCargar d-inline-block">
+                                                            <input type="file" class="inpArchivo mt-2" id="inpCarpeta" name="carpetas[]" webkitdirectory required>
+                                                            <div class="puntoRojo" id="puntoRojoC" style="display:none;"></div>
+                                                            <p class="m-0">Seleccionar Carpeta</p>
+                                                        </div>
+                                                    </div>
+                                                    <label for="slctCat" class="btnCargar mb-2" >Categoria de Archivos:</label>
+                                                    <select class="form-select mb-4" aria-label="Default select example" name="slctCat" id="slctCat">
+                                                        <?php foreach($categorias as $filaCat){ if(in_array($filaCat['id'],$this->session->userdata('permisos'))){?> 
+                                                        <option value="<?= $filaCat['id']?>"><?= $filaCat['descripcion']?></option>
+                                                        <?php }}?>
+                                                    </select>
+
+                                                    <div class="btnNotificar mb-4">
+                                                        <div class="d-flex flex-row align-items-center">
+                                                            <input type="checkbox" id="checkNotificar" name="checkNotificar" checked >
+                                                            <label for="checkNotificar" class="mx-2">Notificar a los Usuarios por Correo</label>
+                                                        </div>
+                                                        <div class="bg-secondary bg-opacity-10 p-2 d-flex flex-column">
+                                                            <?php foreach($usuarios as $usuario){?>
+                                                                <div class="d-flex flex-row align-items-center">
+                                                                    <input class="checkCorreo" type="checkbox" id="checkNot<?= $usuario['idusuario']?>" name="checkNot<?= $usuario['idusuario']?>" value="<?= $usuario['correo'] ?>">
+                                                                    <label for="checkNot<?= $usuario['idusuario']?>" class="mx-2"><?= $usuario['correo'] ?></label>
+                                                                </div>
+                                                            <?php } ?>
+                                                            <div class="d-flex flex-row align-items-center mt-2">
+                                                                <input type="checkbox" id="checkNotTodos" name="checkNotTodos">
+                                                                <label for="checkNotTodos" class="mx-2">Enviar a Todos</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input class="btnSubir mb-2" type="button" id="btnSubir" name="btnSubir" value="Subir">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php }?>
+                        </div>
                     </div>
                 </div>
                 <?php if($this->session->userdata('subir') === '1'){?>
@@ -262,6 +292,11 @@
         </div>
     </main>
     <script>
+        const tamano = document.getElementById('tamano');
+        const labelTamano = document.querySelector('label[for="tamano"]');
+        tamano.addEventListener('change',()=>{
+            labelTamano.innerHTML = tamano.value + ' MB';
+        });
         document.addEventListener('click',e => {
             const esInfoButton = e.target.matches("[data-info-button]");
             if(!esInfoButton && e.target.closest("[data-info-dropdown]") == null) {
@@ -279,6 +314,7 @@
             }
         });
 
+        
     </script>
     <?php if($this->session->userdata('subir') === '1'):?>
         <script src="<?= base_url('assets/js/fnDashboard.js')?>"></script>
