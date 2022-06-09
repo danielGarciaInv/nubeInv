@@ -39,6 +39,7 @@ class Dashboard extends CI_Controller {
             }else{
                 $_REQUEST["orden"] = $_REQUEST["orden"];
             }
+            $parametros = [['parametro' => 'tamano', 'valor' => $_REQUEST["tamano"]],['parametro' => 'orden', 'valor' => $_REQUEST["orden"]]];
 
             $contenido = $this->mostrarArchivos($inicio, $limite, $_REQUEST["tamano"], $_REQUEST["orden"]);
             $totalArchivos = $contenido['totalArchivos'];
@@ -59,6 +60,8 @@ class Dashboard extends CI_Controller {
             $cont['limite'] = $limite;
             $cont['paginas'] = $paginas;
             $cont['filtro'] = true;
+            $cont['parametros'] = $parametros;
+            $cont['metodo'] = '';
             $this->session->set_userdata('dirActual','cargados/');
             $this->load->view('comun/head',$cont);
             $this->load->view('Dashboard',$cont);
@@ -518,8 +521,13 @@ class Dashboard extends CI_Controller {
     // Función para buscar archivos y carpetas
     public function busqueda(){
         if($this->session->userdata('correo')){
+            // ---------------------------- Parametros REQUEST del método
             $keyword = $_GET['busqueda'];
+            $parametros = [['parametro' => 'busqueda', 'valor' => $keyword]];
+
+
             $archivos = [];
+            $archivosAll = [];
             $carpetas = [];
             if(empty($_REQUEST["pag"]) || $_REQUEST["pag"] == "" || !isset($_REQUEST["pag"])){
                 $_REQUEST["pag"] = '1';
@@ -535,19 +543,25 @@ class Dashboard extends CI_Controller {
             else{
                 $inicio = 0;
             }
-            $busquedaArchivos = $this->DashboardDB->buscarArchivos($keyword, $inicio, $limite);
+            $busquedaArchivosLimit = $this->DashboardDB->buscarArchivosLimit($keyword, $inicio, $limite);
+            $busquedaArchivos = $this->DashboardDB->buscarArchivos($keyword);
             $busquedaCarpetas = $this->DashboardDB->buscarCarpetas($keyword, $inicio, $limite);
-            while($fila = mysqli_fetch_array($busquedaArchivos)){
+            while($fila = mysqli_fetch_array($busquedaArchivosLimit)){
                 if(in_array($fila['id_categoria'],$this->session->userdata('permisos'))){
                     array_push($archivos, $fila);
+                }
+            }
+            while($fila = mysqli_fetch_array($busquedaArchivos)){
+                if(in_array($fila['id_categoria'],$this->session->userdata('permisos'))){
+                    array_push($archivosAll, $fila);
                 }
             }
             while($fila = mysqli_fetch_array($busquedaCarpetas)){
                 array_push($carpetas, $fila);
             }
             
-            $totalArchivos = count($archivos);
-            $paginas=ceil($totalArchivos/$limite);
+            $totalArchivos = count($archivosAll);
+            $paginas = ceil($totalArchivos/$limite);
             
             $cont['archivos'] = $archivos;
             $cont['folders'] = $carpetas;
@@ -562,6 +576,8 @@ class Dashboard extends CI_Controller {
             $cont['totalArchivos'] = $totalArchivos;
             $cont['limite'] = $limite;
             $cont['paginas'] = $paginas;
+            $cont['parametros'] = $parametros;
+            $cont['metodo'] = 'busqueda';
             $this->session->set_userdata('dirActual','cargados/');
             $this->load->view('comun/head',$cont);
             $this->load->view('Dashboard',$cont);
@@ -630,6 +646,21 @@ class Dashboard extends CI_Controller {
         $this->validarTmpUsrs();
 
         if($this->session->userdata('correo')){
+            if(empty($_REQUEST["pag"]) || $_REQUEST["pag"] == "" || !isset($_REQUEST["pag"])){
+                $_REQUEST["pag"] = '1';
+            }else{
+                $_REQUEST["pag"] = $_REQUEST["pag"];
+            }
+            $pagina = $_REQUEST["pag"];
+            $limite = '15';
+            
+            if(is_numeric($pagina)){
+                $inicio = ($pagina-1) * $limite;
+            }
+            else{
+                $inicio = 0;
+            }
+
             $info = $this->DashboardDB->infoFoldersId($id);
             $nombreLimpio = $info[0]->nombre;
             $directorio = $info[0]->ruta;
@@ -650,7 +681,7 @@ class Dashboard extends CI_Controller {
                 }
             }
             
-            $archivosPrev = $this->DashboardDB->devolverArchivos();
+            $archivosPrev = $this->DashboardDB->devolverArchivosLimitCarpeta($this->session->userdata('dirActual'), $inicio, $limite);
             while($fila = mysqli_fetch_array($archivosPrev)){
                 if(in_array($fila['id_categoria'],$this->session->userdata('permisos'))){
                     if(in_array($fila['ruta'],$archivosScan)){
@@ -659,6 +690,7 @@ class Dashboard extends CI_Controller {
                 }
             }
             
+            $totalArchivos = count($archivosScan);
             if($this->session->userdata('rol') === '1'){
                 $cont['roles'] = $this->consultaRoles();
             }
@@ -668,6 +700,12 @@ class Dashboard extends CI_Controller {
             $cont['folders'] = $carpetas;
             $cont['navegador'] = $navegador;
             $cont['tituloPagina'] = $nombreLimpio;
+            $cont['pagina'] = $pagina;
+            $cont['totalArchivos'] = $totalArchivos;
+            $cont['limite'] = $limite;
+            $cont['paginas'] = ceil($totalArchivos/$limite);
+            $cont['parametros'] = [];
+            $cont['metodo'] = 'folder/'.$id;
             $this->load->view('comun/head',$cont);
             $this->load->view('Dashboard',$cont);
             $this->load->view('comun/footer');
@@ -694,20 +732,48 @@ class Dashboard extends CI_Controller {
 
         if($this->session->userdata('correo')){
             $this->session->set_userdata('dirActual','cargados/');
-            if($this->session->userdata('rol') === '1'){
-                $cont['roles'] = $this->consultaRoles();
+            if(empty($_REQUEST["pag"]) || $_REQUEST["pag"] == "" || !isset($_REQUEST["pag"])){
+                $_REQUEST["pag"] = '1';
+            }else{
+                $_REQUEST["pag"] = $_REQUEST["pag"];
+            }
+            $pagina = $_REQUEST["pag"];
+            $limite = '15';
+            
+            if(is_numeric($pagina)){
+                $inicio = ($pagina-1) * $limite;
+            }
+            else{
+                $inicio = 0;
             }
 
             $archivos = [];
-            $archovosTipo = $this->DashboardDB->devolverArchivosTipo($id_cat);
+            $archivosScan = [];
+            $archovosTipo = $this->DashboardDB->devolverArchivosTipoLimit($id_cat, $inicio, $limite);
+            $archovosNoLimit = $this->DashboardDB->devolverArchivosTipo($id_cat);
             while($fila = mysqli_fetch_array($archovosTipo)){
                 array_push($archivos,$fila);
             }
+            while($fila = mysqli_fetch_array($archovosNoLimit)){
+                array_push($archivosScan,$fila);
+            }
             
+            $totalArchivos = count($archivosScan);
+            if($this->session->userdata('rol') === '1'){
+                $cont['roles'] = $this->consultaRoles();
+            }
             $cont['categorias'] = $this->mostrarCategorias();
             $cont['usuarios'] = $this->mostrarUsuarios();
             $cont['archivos'] = $archivos;
             $cont['tituloPagina'] = $desripcion;
+
+            $cont['pagina'] = $pagina;
+            $cont['totalArchivos'] = $totalArchivos;
+            $cont['limite'] = $limite;
+            $cont['paginas'] = ceil($totalArchivos/$limite);
+            $cont['parametros'] = [];
+            $cont['metodo'] = 'categoria/'.$id_cat.'/'.$desripcion;
+
             $this->load->view('comun/head',$cont);
             $this->load->view('Dashboard',$cont);
             $this->load->view('comun/footer');

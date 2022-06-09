@@ -29,8 +29,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     const checkNotificar = document.getElementById('checkNotificar');
     const checkNotTodos = document.getElementById('checkNotTodos');
     const checksCorreos = document.getElementsByClassName('checkCorreo');
+    const usrsNotificar = document.getElementById('usrsNotificar');
+    const ulCorreosNot = document.getElementById('ulCorreosNot');
 
     var pos = 0;
+    var correosNotificar = [];
 
     /* ------------------------------------- Puestas en marcha cuando carga la página ------------------------------------------ */
 
@@ -73,7 +76,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                     checksCorreosArr.push(check.value);
                 }
             }
-            checksCorreosArr = JSON.stringify(checksCorreosArr);
+            checksCorreosArr = JSON.stringify(correosNotificar);
             formData.append('checksCorreosArr',checksCorreosArr);
             formData.append('checkNotificar',checkNotificar.checked);
             formData.append('categoria',slctCat.value);
@@ -155,8 +158,22 @@ document.addEventListener('DOMContentLoaded',()=>{
         window.location.reload();
     }
 
+    function crearTag(){
+        ulCorreosNot.querySelectorAll('li').forEach(li => li.remove());
+        correosNotificar.forEach(correo => {
+            let tag = `<li class="list-group-item d-flex">${correo}<p class="tagCorreoNot m-0 ms-2 px-2 text-white bg-secondary rounded-circle" style="cursor:pointer;">x</p></li>`;
+            ulCorreosNot.insertAdjacentHTML('afterbegin', tag);
+            document.querySelector('.tagCorreoNot').addEventListener('click',(e)=>{
+                eliminarTag(e.target, correo);
+            });        
+        });
+    }
     
-    
+    function eliminarTag(element, correo){
+        let index = correosNotificar.indexOf(correo);
+        correosNotificar = [...correosNotificar.slice(0,index), ...correosNotificar.slice(index + 1)];
+        element.parentElement.remove();
+    }
     /* ------------------------------------- Eventos y Declaraciones ------------------------------------------ */
 
 
@@ -244,7 +261,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
 
     // Escucha al input checkNotTodos para marcar todos los correos como seleccionados
-    checkNotTodos.addEventListener('click',()=>{
+    /* checkNotTodos.addEventListener('click',()=>{
         if(checkNotTodos.checked){
             for (const check of checksCorreos) {
                 check.checked = true;
@@ -254,19 +271,28 @@ document.addEventListener('DOMContentLoaded',()=>{
                 check.checked = false;
             }
         }
-    });
+    }); */
 
     // Escucha al checkNotificar para habilitar la selección de los correos que serán notificados
     checkNotificar.addEventListener('click',()=>{
         if(checkNotificar.checked){
-            for (const check of checksCorreos) {
-                check.disabled = false;
-            }
+            // for (const check of checksCorreos) {
+                usrsNotificar.disabled = false;
+            // }
         }else{
-            for (const check of checksCorreos) {
-                check.disabled = true;
-            }
+            // for (const check of checksCorreos) {
+                usrsNotificar.disabled = true;
+            // }
         }
     });
+
+    usrsNotificar.addEventListener('change',(e)=>{
+        if(!correosNotificar.includes(e.target.value)){
+            correosNotificar.push(e.target.value);
+            crearTag();
+        }
+        usrsNotificar.value = "";
+    });
+
 });
 

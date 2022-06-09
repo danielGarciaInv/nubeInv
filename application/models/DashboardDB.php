@@ -30,8 +30,8 @@ class DashboardDB extends CI_model{
         return $consultaArchivos->result_id;
     }
 
-    public function devolverArchivosLimit($inicio, $limite){
-        $consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado ORDER BY id DESC LIMIT $inicio,$limite");
+    public function devolverArchivosLimitCarpeta($ruta, $inicio, $limite){
+        $consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado WHERE ruta LIKE '$ruta%' ORDER BY id DESC LIMIT $inicio,$limite");
         return $consultaArchivos->result_id;
     }
 
@@ -48,6 +48,11 @@ class DashboardDB extends CI_model{
     public function devolverArchivosPre(){
         $consultaArchivos = $this->db->get('archivo_cargado');
         return $consultaArchivos;
+    }
+
+    public function devolverArchivosTipoLimit($id_categoria, $inicio, $limite){
+        $consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado WHERE id_categoria = '$id_categoria' ORDER BY id DESC LIMIT $inicio,$limite;");
+        return $consultaArchivos->result_id;
     }
 
     public function devolverArchivosTipo($id_categoria){
@@ -128,8 +133,13 @@ class DashboardDB extends CI_model{
         return $correos->result();
     }
 
-    public function buscarArchivos($key, $inicio, $limite){
+    public function buscarArchivosLimit($key, $inicio, $limite){
         $resultado = $this->db->query("SELECT * FROM archivo_cargado WHERE nombre LIKE LOWER('%$key%') LIMIT $inicio,$limite;");
+        return $resultado->result_id;
+    }
+
+    public function buscarArchivos($key){
+        $resultado = $this->db->query("SELECT * FROM archivo_cargado WHERE nombre LIKE LOWER('%$key%');");
         return $resultado->result_id;
     }
 

@@ -127,16 +127,19 @@
                                                             <label for="checkNotificar" class="mx-2">Notificar a los Usuarios por Correo</label>
                                                         </div>
                                                         <div class="bg-secondary bg-opacity-10 p-2 d-flex flex-column">
-                                                            <?php foreach($usuarios as $usuario){?>
-                                                                <div class="d-flex flex-row align-items-center">
-                                                                    <input class="checkCorreo" type="checkbox" id="checkNot<?= $usuario['idusuario']?>" name="checkNot<?= $usuario['idusuario']?>" value="<?= $usuario['correo'] ?>">
-                                                                    <label for="checkNot<?= $usuario['idusuario']?>" class="mx-2"><?= $usuario['correo'] ?></label>
-                                                                </div>
-                                                            <?php } ?>
-                                                            <div class="d-flex flex-row align-items-center mt-2">
-                                                                <input type="checkbox" id="checkNotTodos" name="checkNotTodos">
-                                                                <label for="checkNotTodos" class="mx-2">Enviar a Todos</label>
+                                                            <div class="d-flex flex-row flex-wrap">
+                                                                <ul class="list-group list-group-horizontal d-flex flex-wrap" id="ulCorreosNot"></ul>
                                                             </div>
+                                                            <select class="form-select mt-2" name="usrsNotificar" id="usrsNotificar">
+                                                                <option value="">Buscar usuario para notificar</option>
+                                                                <?php foreach($usuarios as $usuario){?>
+                                                                    <option value="<?= $usuario['correo'] ?>"><?= $usuario['correo'] ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                            <!-- <div class="d-flex flex-row align-items-center mt-2">
+                                                                <input type="checkbox" id="checkNotTodos" name="checkNotTodos">
+                                                                <label for="checkNotTodos" class="mx-2">Notificar a Todos</label>
+                                                            </div> -->
                                                         </div>
                                                     </div>
                                                     <input class="btnSubir mb-2" type="button" id="btnSubir" name="btnSubir" value="Subir">
@@ -262,6 +265,11 @@
                             <ul class="pagination pg-dark justify-content-center pb-5 pt-5 mb-0" style="float: none;" >
                                 <li class="page-item">
                                 <?php
+                                $parURL = '';
+                                foreach ($parametros as $par) {
+                                    $parURL .= $par['parametro'].'=';
+                                    $parURL .= $par['valor'].'&';
+                                }
                                 if($_REQUEST["pag"] == "1" ){
                                     $_REQUEST["pag"] == "0";
                                     echo  "";
@@ -269,8 +277,8 @@
                                     if ($pagina>1)
                                     $ant = $_REQUEST["pag"] - 1;
                                 ?>                                    
-                                    <a class="page-link" aria-label="Previous" href="<?= base_url('index.php/Dashboard?pag=1')?>"><span aria-hidden='true'>&laquo;</span></a>
-                                    <li class="page-item"><a class="page-link" href="<?= base_url('index.php/Dashboard?pag='. ($pagina-1) )?>"><?=$ant?></a></li>
+                                    <a class="page-link" aria-label="Previous" href="<?= base_url('index.php/Dashboard/'.$metodo.'?'.$parURL.'pag=1')?>"><span aria-hidden='true'>&laquo;</span></a>
+                                    <li class="page-item"><a class="page-link" href="<?= base_url('index.php/Dashboard/'.$metodo.'?'.$parURL.'pag='. ($pagina-1) )?>"><?=$ant?></a></li>
                                 <?php } ?>
                                 <li class='page-item active'><a class='page-link'><?= $_REQUEST["pag"] ?></a></li>
                                 <?php
@@ -280,8 +288,8 @@
                                     $ultima == "";
                                 }
                                 if ($pagina<$paginas && $paginas>1){?>
-                                <li class="page-item"><a class="page-link" href="<?=base_url('index.php/Dashboard?pag='.($pagina+1))?>"><?=$sigui?></a></li>
-                                <li class="page-item"><a class="page-link" aria-label="Next" href="<?=base_url('index.php/Dashboard?pag='.ceil($ultima))?>"><span aria-hidden='true'>&raquo;</span></a></li>
+                                <li class="page-item"><a class="page-link" href="<?=base_url('index.php/Dashboard/'.$metodo.'?'.$parURL.'pag='.($pagina+1))?>"><?=$sigui?></a></li>
+                                <li class="page-item"><a class="page-link" aria-label="Next" href="<?=base_url('index.php/Dashboard/'.$metodo.'?'.$parURL.'pag='.ceil($ultima))?>"><span aria-hidden='true'>&raquo;</span></a></li>
                                 <?php }?>
                             </ul>
                         </div>
@@ -294,6 +302,7 @@
     <script>
         const tamano = document.getElementById('tamano');
         const labelTamano = document.querySelector('label[for="tamano"]');
+
         tamano.addEventListener('change',()=>{
             labelTamano.innerHTML = tamano.value + ' MB';
         });
@@ -313,7 +322,6 @@
                 dropdownActual.classList.toggle("mostrarMenu");
             }
         });
-
         
     </script>
     <?php if($this->session->userdata('subir') === '1'):?>
