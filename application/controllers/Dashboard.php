@@ -146,19 +146,16 @@ class Dashboard extends CI_Controller {
                         $tipo = 1;
                     }
                     $cat = 'img';
-                    // $nombre = 'Invirtual_image_'.$indice;
                 break;
                 // Tipo video: nada que reportar xd
                 case 'video':
                     $tipo = 2;
                     $cat = 'aud';
-                    // $nombre = 'Invirtual_video_'.$indice;
                 break;
                 // Tipo audio: nada que reportar
                 case 'audio':
                     $tipo = 3;
                     $cat = 'aud';
-                    // $nombre = 'Invirtual_audio_'.$indice;
                 break;
                 // Tipo application: los candidatos a tener un icono especial de momento son pdf, archivos de office, sql y zip, los demas tendran un icono de archivo
                 case 'application':
@@ -166,32 +163,25 @@ class Dashboard extends CI_Controller {
                         case 'pdf':
                             // El tipo 41 tambien tendrá un enlace en su renderizado
                             $tipo = 41;
-                            // $nombre = 'Invirtual_pdf_'.$indice;
                             break;
                         case 'docx':
                             $tipo = 42;
-                            // $nombre = 'Invirtual_doc_'.$indice;
                             break;
                         case 'pptx':
                             $tipo = 43;
-                            // $nombre = 'Invirtual_slide_'.$indice;
                             break;
                         case 'xlsx':
                             $tipo = 44;
-                            // $nombre = 'Invirtual_sheet_'.$indice;
                             break;
                         case 'sql':
                             $tipo = 45;
-                            // $nombre = 'Invirtual_db_'.$indice;
                             break;
                         case 'zip':
                         case 'rar':
                             $tipo = 46;
-                            // $nombre = 'Invirtual_file_'.$indice;
                             break;
                         default:
                             $tipo = 6;
-                            // $nombre = 'Invirtual_file_'.$indice;
                             break;
                     }
                     $cat = 'appl';
@@ -200,13 +190,11 @@ class Dashboard extends CI_Controller {
                 case 'text':
                     $tipo = 5;
                     $cat = 'appl';
-                    // $nombre = 'Invirtual_text_'.$indice;
                 break;
                 // Demas: cualquier otro tipo que no haya sido asignado tendra un icono de archivo
                 default :
                     $tipo = 6;
                     $cat = 'appl';
-                    // $nombre = 'Invirtual_file_'.$indice;
             }
             $nombre .= '.'.$extencion;
             $ruta = $directorio . $nombre;
@@ -325,19 +313,16 @@ class Dashboard extends CI_Controller {
                         $tipo = 1;
                     }
                     $cat = 'img';
-                    // $nombre = 'Invirtual_image_'.$indice;
                 break;
                 // Tipo video: nada que reportar xd
                 case 'video':
                     $tipo = 2;
                     $cat = 'aud';
-                    // $nombre = 'Invirtual_video_'.$indice;
                 break;
                 // Tipo audio: nada que reportar
                 case 'audio':
                     $tipo = 3;
                     $cat = 'aud';
-                    // $nombre = 'Invirtual_audio_'.$indice;
                 break;
                 // Tipo application: los candidatos a tener un icono especial de momento son pdf, archivos de office, sql y zip, los demas tendran un icono de archivo
                 case 'application':
@@ -345,32 +330,25 @@ class Dashboard extends CI_Controller {
                         case 'pdf':
                             // El tipo 41 tambien tendrá un enlace en su renderizado
                             $tipo = 41;
-                            // $nombre = 'Invirtual_pdf_'.$indice;
                             break;
                         case 'docx':
                             $tipo = 42;
-                            // $nombre = 'Invirtual_doc_'.$indice;
                             break;
                         case 'pptx':
                             $tipo = 43;
-                            // $nombre = 'Invirtual_slide_'.$indice;
                             break;
                         case 'xlsx':
                             $tipo = 44;
-                            // $nombre = 'Invirtual_sheet_'.$indice;
                             break;
                         case 'sql':
                             $tipo = 45;
-                            // $nombre = 'Invirtual_db_'.$indice;
                             break;
                         case 'zip':
                         case 'rar':
                             $tipo = 46;
-                            // $nombre = 'Invirtual_file_'.$indice;
                             break;
                         default:
                             $tipo = 6;
-                            // $nombre = 'Invirtual_file_'.$indice;
                             break;
                     }
                     $cat = 'appl';
@@ -379,13 +357,11 @@ class Dashboard extends CI_Controller {
                 case 'text':
                     $tipo = 5;
                     $cat = 'appl';
-                    // $nombre = 'Invirtual_text_'.$indice;
                 break;
                 // Demas: cualquier otro tipo que no haya sido asignado tendra un icono de archivo
                 default :
                     $tipo = 6;
                     $cat = 'appl';
-                    // $nombre = 'Invirtual_file_'.$indice;
             }
             $nombre .= '.'.$extencion;
             $ruta = $path . '/' . $nombre;
