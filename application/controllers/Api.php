@@ -21,10 +21,10 @@ class Api extends CI_Controller {
 	}
 
     public function subirimgv1(){
+        header('Access-Control-Allow-Origin: https://centralinvirzo.xyz');
+        header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+        header('Access-Control-Allow-Methods: POST');
         if(file_get_contents('php://input') != ''){
-            header('Access-Control-Allow-Origin: https://centralinvirzo.xyz');
-            header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
-            header('Access-Control-Allow-Methods: POST');
             
             $directorio = 'cargados/CRM_Images';
             if(!file_exists($directorio)){
@@ -79,10 +79,10 @@ class Api extends CI_Controller {
     }
 
     public function subirpdfv1(){
+        header('Access-Control-Allow-Origin: https://centralinvirzo.xyz');
+        header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+        header('Access-Control-Allow-Methods: POST');
         if(file_get_contents('php://input') != ''){
-            header('Access-Control-Allow-Origin: https://centralinvirzo.xyz');
-            header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
-            header('Access-Control-Allow-Methods: POST');
 
             $directorio = 'cargados/CRM_Files';
             if(!file_exists($directorio)){
