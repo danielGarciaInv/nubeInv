@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         fetch(`${url}index.php/Dashboard/nuevaCarpeta`,{
             method: 'POST',
             body: formData
-        }).then(r => r.text()).then(res => window.location.reload());
+        }).then(r => r.text()).then(res => console.log(res)/*window.location.reload()*/);
     }
 
     // Función mostrarProgreso: recibe el estatus del progreso y en base a ello modifica el ancho de la barra

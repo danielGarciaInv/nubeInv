@@ -108,10 +108,9 @@ class Dashboard extends CI_Controller {
 */
     public function subirArchivo(){
         $directorio = $this->session->userdata('dirActual');
-
+        
         $categoria = $_POST['categoria'];
         $checkNotificar = $_POST['checkNotificar'];
-        $checksCorreos = json_decode($_POST['checksCorreosArr']);
         $charReservados = [" ","!","#","$","%","&","'","(",")","*","+",",","/",":",";","=","?","@","[","]"];
         foreach ($_FILES as $archivo) {
             $nombre = $archivo['name'];
@@ -199,9 +198,6 @@ class Dashboard extends CI_Controller {
             $nombre .= '.'.$extencion;
             $ruta = $directorio . $nombre;
 
-            var_dump($nombre);
-            var_dump($ruta);
-
             // Condicional para desplegar el tamaño en KB, en MB o en GB(ésta ya es la variable definitiva que se enviara a BD)
             if($tamanoKb>1000000.0){
                 $tamanoKb /= 1000000.0;
@@ -230,6 +226,7 @@ class Dashboard extends CI_Controller {
         // Primero se hace una consulta para determinar la categoria del ultimo archivo subido (Esto para que no haya que enviar muchos correos)
         
         if($checkNotificar === 'true'){
+            $checksCorreos = json_decode($_POST['checksCorreosArr']);
             $cat = $this->DashboardDB->ultimaCategoria();
             $mensaje = '<h2>Nuevo contenido disponible</h2><br>';
             $mensaje .= '<p>Se ha subido nuevo contenido a la sección '.$cat[0]->descripcion.'</p><br>';
@@ -262,7 +259,6 @@ class Dashboard extends CI_Controller {
         
         $categoria = $_POST['categoria'];
         $checkNotificar = $_POST['checkNotificar'];
-        $checksCorreos = json_decode($_POST['checksCorreosArr']);
         $charReservados = [" ","!","#","$","%","&","'","(",")","*","+",",","/",":",";","=","?","@","[","]"];
 
         for($i = 0; $i < count($_POST['folder']); $i++){
@@ -391,6 +387,7 @@ class Dashboard extends CI_Controller {
         }
 
         if($checkNotificar === 'true'){
+            $checksCorreos = json_decode($_POST['checksCorreosArr']);
             $cat = $this->DashboardDB->ultimaCategoria();
             $mensaje = '<h2>Nuevo contenido disponible</h2><br>';
             $mensaje .= '<p>Se ha subido nuevo contenido a la sección '.$cat[0]->descripcion.'</p><br>';

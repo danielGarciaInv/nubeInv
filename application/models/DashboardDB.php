@@ -152,5 +152,11 @@ class DashboardDB extends CI_model{
         $resultado = $this->db->query("SELECT MAX(tamano) maximo FROM archivo_cargado WHERE tamano LIKE '%$unidad' AND ruta NOT LIKE '$path%/%'");
         return $resultado->result();
     }
+
+    public function maxIdCrmFiles(){
+        $resultado = $this->db->query("SELECT MAX(id) maximo FROM archivo_cargado WHERE ruta LIKE 'cargados/CRM_Files/%'");
+        $resultado = $resultado->result();
+        return $resultado[0]->maximo;
+    }
 }
 ?>

@@ -300,27 +300,31 @@
         </div>
     </main>
     <script>
-        const tamano = document.getElementById('tamano');
-        const labelTamano = document.querySelector('label[for="tamano"]');
-
-        tamano.addEventListener('change',()=>{
-            labelTamano.innerHTML = tamano.value + ' MB';
-        });
-        document.addEventListener('click',e => {
-            const esInfoButton = e.target.matches("[data-info-button]");
-            if(!esInfoButton && e.target.closest("[data-info-dropdown]") == null) {
-                document.querySelectorAll("[data-info-menu]").forEach(menu => {
-                    menu.classList.remove("mostrarMenu");
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const tamano = document.getElementById('tamano');
+            const labelTamano = document.querySelector('label[for="tamano"]');
+    
+            if(tamano != null){
+                tamano.addEventListener('change',()=>{
+                    labelTamano.innerHTML = tamano.value + ' MB';
                 });
-                return;
             }
-
-            let dropdownActual;
-            if(esInfoButton){
-                dropdownActual = e.target.closest("[data-info-dropdown]").children;
-                dropdownActual = dropdownActual[dropdownActual.length - 1];
-                dropdownActual.classList.toggle("mostrarMenu");
-            }
+            document.addEventListener('click',e => {
+                const esInfoButton = e.target.matches("[data-info-button]");
+                if(!esInfoButton && e.target.closest("[data-info-dropdown]") == null) {
+                    document.querySelectorAll("[data-info-menu]").forEach(menu => {
+                        menu.classList.remove("mostrarMenu");
+                    });
+                    return;
+                }
+    
+                let dropdownActual;
+                if(esInfoButton){
+                    dropdownActual = e.target.closest("[data-info-dropdown]").children;
+                    dropdownActual = dropdownActual[dropdownActual.length - 1];
+                    dropdownActual.classList.toggle("mostrarMenu");
+                }
+            });
         });
         
     </script>
