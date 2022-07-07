@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             formData.append('checksCorreosArr',checksCorreosArr);
             formData.append('checkNotificar',checkNotificar.checked);
             formData.append('categoria',slctCat.value);
+            formData.append('idCarp',idCarp.value);
 
             var ajax = new XMLHttpRequest();
             ajax.upload.addEventListener('progress',mostrarProgreso,false);
@@ -118,6 +119,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             formData.append('checksCorreosArr',checksCorreosArr);
             formData.append('checkNotificar',checkNotificar.checked);
             formData.append('categoria',slctCat.value);
+            formData.append('id_categoria',idCat.value);
 
             var ajax = new XMLHttpRequest();
             ajax.upload.addEventListener('progress',mostrarProgreso,false);
@@ -139,10 +141,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     function crearCarpeta(){
         let formData = new FormData();
         formData.append('nombreNuevaCarpeta',nombreNuevaCarpeta.value);
+        formData.append('id_categoria',idCat.value);
         fetch(`${url}index.php/Dashboard/nuevaCarpeta`,{
             method: 'POST',
             body: formData
-        }).then(r => r.text()).then(res => console.log(res)/*window.location.reload()*/);
+        }).then(r => r.text()).then(res => window.location.reload());
     }
 
     // Función mostrarProgreso: recibe el estatus del progreso y en base a ello modifica el ancho de la barra

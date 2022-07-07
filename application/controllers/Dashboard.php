@@ -111,6 +111,7 @@ class Dashboard extends CI_Controller {
         
         $categoria = $_POST['categoria'];
         $checkNotificar = $_POST['checkNotificar'];
+        $idCarp = $_POST['idCarp'];
         $charReservados = [" ","!","#","$","%","&","'","(",")","*","+",",","/",":",";","=","?","@","[","]"];
         foreach ($_FILES as $archivo) {
             $nombre = $archivo['name'];
@@ -215,7 +216,7 @@ class Dashboard extends CI_Controller {
             // Ya listas todas las variables, toca mover el archivo al directorio final y registrarlo en BD
             if(move_uploaded_file($archivo['tmp_name'],$ruta)) {
                 // Si y solo si el archivo se movió, éste se registrá en BD
-                $this->DashboardDB->registroArchivo($nombre,$ruta,$tamano,$fecha,$tipo,$cat,$categoria);
+                $this->DashboardDB->registroArchivo($nombre,$ruta,$tamano,$fecha,$tipo,$cat,$categoria,$idCarp);
                 echo "Archivo Subido";
             }else{
                 echo "Error al subir archivo";
@@ -259,6 +260,8 @@ class Dashboard extends CI_Controller {
         
         $categoria = $_POST['categoria'];
         $checkNotificar = $_POST['checkNotificar'];
+        $id_categoria = $_POST['id_categoria'];
+        var_dump("categoria de carpeta: ".$id_categoria);
         $charReservados = [" ","!","#","$","%","&","'","(",")","*","+",",","/",":",";","=","?","@","[","]"];
 
         for($i = 0; $i < count($_POST['folder']); $i++){
@@ -274,8 +277,9 @@ class Dashboard extends CI_Controller {
             if(!file_exists($path)){
                 mkdir($path, 0775, true);
                 // -------------------------------------------------------- Funcion para registrar carpeta en BD
-                $this->DashboardDB->registrarCarpeta($nombreFolder, $path);
+                $this->DashboardDB->registrarCarpeta($nombreFolder, $path, $id_categoria);
             }
+            $id_carpeta = $this->DashboardDB->idCarpetaPath($path);
 
             $temp_file = $_FILES['file']['tmp_name'][$i];
             $nombre = $_FILES['file']['name'][$i];
@@ -379,7 +383,7 @@ class Dashboard extends CI_Controller {
             // Ya listas todas las variables, toca mover el archivo al directorio final y registrarlo en BD
             if(move_uploaded_file($temp_file,$ruta)) {
                 // Si y solo si el archivo se movió, éste se registrá en BD
-                $this->DashboardDB->registroArchivo($nombre,$ruta,$tamano,$fecha,$tipo,$cat,$categoria);
+                $this->DashboardDB->registroArchivo($nombre,$ruta,$tamano,$fecha,$tipo,$cat,$categoria,$id_carpeta);
                 echo "Archivo Subido";
             }else{
                 echo "Error al subir archivo";
@@ -419,12 +423,13 @@ class Dashboard extends CI_Controller {
     public function nuevaCarpeta(){
         $directorio = $this->session->userdata('dirActual');
         $nombreCarpeta = $_POST['nombreNuevaCarpeta'];
+        $id_categoria = $_POST['id_categoria'];
         $path = $directorio . $nombreCarpeta;
             
         if(!file_exists($path)){
             mkdir($path, 0775, true);
             // -------------------------------------------------------- Funcion para registrar carpeta en BD
-            $this->DashboardDB->registrarCarpeta($nombreCarpeta, $path);
+            $this->DashboardDB->registrarCarpeta($nombreCarpeta, $path, $id_categoria);
             echo "true";
         }else{
             echo "false";
@@ -464,12 +469,13 @@ class Dashboard extends CI_Controller {
     }
 
     // Función para eliminar archivos del servidor
-    public function eliminarArchivo(){
-        $ruta = $_POST['ruta'];
+    public function eliminarArchivo($id){
+        $consultaArchivo = $this->DashboardDB->devolverArchivo($id);
+        $ruta = $consultaArchivo[0]->ruta;
         unlink('./'.$ruta);
         $this->DashboardDB->eliminarArchivo($ruta);
 
-        redirect('Dashboard');
+        echo "true";
     }
 
     // Función para eliminar archivos del servidor
@@ -603,6 +609,23 @@ class Dashboard extends CI_Controller {
         return $carpetas;
     }
 
+    public function escanearFoldersCat($ruta, $id_cat){
+        $carpetas = [];
+        $directorio = $ruta;
+        $ficheros = scandir($directorio);
+        array_shift($ficheros);
+        array_shift($ficheros);
+        foreach ($ficheros as $elemento) {
+            if(is_dir($directorio.$elemento)){
+                $info = $this->DashboardDB->infoFoldersRutaCat($directorio.$elemento, $id_cat);
+                while($fila = mysqli_fetch_array($info)){
+                    array_push($carpetas, $fila);
+                }
+            }
+        }
+        return $carpetas;
+    }
+
     public function crearNavegador($path){
         $carpetasNavegador = [];
         while($path != 'cargados'){
@@ -679,6 +702,7 @@ class Dashboard extends CI_Controller {
             $cont['paginas'] = ceil($totalArchivos/$limite);
             $cont['parametros'] = [];
             $cont['metodo'] = 'folder/'.$id;
+            $cont['id_carpeta'] = $id;
             $this->load->view('comun/head',$cont);
             $this->load->view('Dashboard',$cont);
             $this->load->view('comun/footer');
@@ -738,7 +762,8 @@ class Dashboard extends CI_Controller {
             $cont['categorias'] = $this->mostrarCategorias();
             $cont['usuarios'] = $this->mostrarUsuarios();
             $cont['archivos'] = $archivos;
-            $cont['tituloPagina'] = $desripcion;
+            $cont['folders'] = $this->escanearFoldersCat('cargados/',$id_cat);
+            $cont['tituloPagina'] = str_replace('%20',' ',$desripcion);
 
             $cont['pagina'] = $pagina;
             $cont['totalArchivos'] = $totalArchivos;
@@ -746,6 +771,7 @@ class Dashboard extends CI_Controller {
             $cont['paginas'] = ceil($totalArchivos/$limite);
             $cont['parametros'] = [];
             $cont['metodo'] = 'categoria/'.$id_cat.'/'.$desripcion;
+            $cont['id_categoria'] = $id_cat;
 
             $this->load->view('comun/head',$cont);
             $this->load->view('Dashboard',$cont);

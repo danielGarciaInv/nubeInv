@@ -79,6 +79,7 @@
                                                     <div class="d-flex flex-column justify-content-around mb-4">
                                                         <label>Nombre: </label>
                                                         <input type="text" class="form-control" id="nombreNuevaCarpeta" name="nombreNuevaCarpeta" required>
+                                                        <input type="hidden" id="idCat" value="<?php if(isset($id_categoria)){echo $id_categoria;}else{echo "NULL";} ?>">
                                                     </div>
                                                     <input class="btnSubir mb-2" type="button" id="btnCrearCarpeta" name="btnCrearCarpeta" value="Crear">
                                                 </form>
@@ -142,6 +143,7 @@
                                                             </div> -->
                                                         </div>
                                                     </div>
+                                                    <input type="hidden" id="idCarp" value="<?php if(isset($id_carpeta)){echo $id_carpeta;}else{echo "NULL";} ?>">
                                                     <input class="btnSubir mb-2" type="button" id="btnSubir" name="btnSubir" value="Subir">
                                                 </form>
                                             </div>
@@ -245,7 +247,7 @@
                                                         <p></p><p>Descargar</p>
                                                     </a>
                                                     <?php if($this->session->userdata('eliminar') === '1'):?>
-                                                        <a href="<?= base_url()."index.php/Dashboard/confirmarEliminar/".$fila['id']?>" class="btnEli">
+                                                        <a onClick="eliminarArchivo('<?= base_url()."index.php/Dashboard/eliminarArchivo/".$fila['id']?>')" class="btnEli">
                                                             <p></p><p>Eliminar</p>
                                                         </a>
                                                     <?php endif; ?>
@@ -309,6 +311,7 @@
                     labelTamano.innerHTML = tamano.value + ' MB';
                 });
             }
+
             document.addEventListener('click',e => {
                 const esInfoButton = e.target.matches("[data-info-button]");
                 if(!esInfoButton && e.target.closest("[data-info-dropdown]") == null) {
@@ -326,7 +329,20 @@
                 }
             });
         });
-        
+        const eliminarArchivo = (urlEliminar) => {
+            let confirmar = confirm('¿Desea eliminar este Archivo?');
+            if(confirmar){
+                fetch(urlEliminar,{
+                    method: 'GET',
+                }).then(res => res.text()).then((respuesta) => {
+                    if(respuesta == 'true'){
+                        window.location.reload();
+                    }
+                });
+            }else{
+                return;
+            }
+        }
     </script>
     <?php if($this->session->userdata('subir') === '1'):?>
         <script src="<?= base_url('assets/js/fnDashboard.js')?>"></script>

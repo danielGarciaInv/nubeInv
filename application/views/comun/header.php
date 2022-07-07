@@ -115,11 +115,11 @@
 <div class="l-navbar" id="nav-bar">
     <nav class="nav">
         <div class="nav_list fw-bold">
-            <a class="nav_link font-weight-bold m-0"><p class="iconoFA"></p><p><?= $this->session->userdata('nombre') ?></p></a>
+            <a class="nav_link m-0"><p class="iconoFA"></p><p><?= $this->session->userdata('nombre') ?></p></a>
             <a href="<?= base_url('index.php/Dashboard')?>" class="nav_link active">Mi Dashboard</a>
             <a data-bs-toggle="collapse" href="#collapseCategorias" aria-controls="collapseCategorias" class="nav_link mb-1">Categorías</a>
             <div class="collapse mb-4 ps-2" id="collapseCategorias">
-                <div class="card bg-transparent border-0 fw-normal">
+                <div class=" bg-transparent border-0 fw-normal scroll-nav">
                     <?php foreach($categorias as $filaCat){ if(in_array($filaCat['id'],$this->session->userdata('permisos'))) {?>
                         <ul class="nav flex-column">
                             <li class="nav-item">
@@ -139,7 +139,7 @@
             <?php if($this->session->userdata('rol') === '1'){?>
             <a data-bs-toggle="collapse" href="#collapseUsuarios" aria-controls="collapseUsuarios" class="nav_link mb-1">Usuarios</a>
             <div class="collapse mb-4 ps-2" id="collapseUsuarios">
-                <div class="card bg-transparent border-0 fw-normal">
+                <div class=" bg-transparent border-0 fw-normal scroll-nav">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link text-white" href="<?= base_url('index.php/Dashboard/roles')?>">Roles</a>
@@ -233,7 +233,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      overflow: hidden
+      /* overflow: hidden; */
     }
 
     .nav_logo,
@@ -293,6 +293,18 @@
       height: 100vh
     }
 
+    .scroll-nav{
+      height: auto;
+      max-height: 260px;
+      overflow: scroll;
+    }
+    .scroll-nav::-webkit-scrollbar{
+      background: transparent;
+      width: 2px;
+    }
+    .scroll-nav::-webkit-scrollbar-thumb{
+      background: var(--first-color-light);
+    }
 </style>
 
 <script>

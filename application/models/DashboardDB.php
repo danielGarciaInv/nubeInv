@@ -9,12 +9,12 @@ class DashboardDB extends CI_model{
         return $this->db->insert('archivo_cargado',['tamano'=>$tamano, 'fecha'=>$fecha, 'tipo'=>$tipo]);
     }
     
-    public function registroArchivo($nombre, $ruta, $tamano, $fecha, $tipo, $cat, $categoria){
-        return $this->db->insert('archivo_cargado',['nombre'=>$nombre, 'ruta'=>$ruta, 'tamano'=>$tamano, 'fecha'=>$fecha, 'tipo'=>$tipo, 'fileType'=>$cat, 'id_categoria'=>$categoria]);
+    public function registroArchivo($nombre, $ruta, $tamano, $fecha, $tipo, $cat, $categoria, $id_carpeta){
+        return $this->db->query("INSERT INTO archivo_cargado VALUES (NULL, '$nombre', '$ruta', '$tamano', '$fecha', '$tipo', '$cat', '$categoria', $id_carpeta);");
     }
 
-    public function registrarCarpeta($nombre, $path){
-        return $this->db->query("INSERT INTO carpeta VALUES (NULL,'$nombre','$path');");
+    public function registrarCarpeta($nombre, $path, $id_categoria){
+        return $this->db->query("INSERT INTO carpeta VALUES (NULL,'$nombre','$path',$id_categoria);");
     }
 
     public function eliminarArchivo($ruta){
@@ -51,7 +51,8 @@ class DashboardDB extends CI_model{
     }
 
     public function devolverArchivosTipoLimit($id_categoria, $inicio, $limite){
-        $consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado WHERE id_categoria = '$id_categoria' ORDER BY id DESC LIMIT $inicio,$limite;");
+        //$consultaArchivos = $this->db->query("SELECT * FROM archivo_cargado WHERE id_categoria = '$id_categoria' ORDER BY id DESC LIMIT $inicio,$limite;");
+        $consultaArchivos = $this->db->query("SELECT a.id id, a.nombre nombre, a.ruta ruta, a.tamano tamano, a.fecha fecha, a.tipo tipo, a.fileType fileType, a.id_categoria categoria, a.id_carpeta id_carpeta FROM archivo_cargado a LEFT JOIN carpeta c ON a.id_carpeta = c.id WHERE a.id_categoria = $id_categoria AND c.id_categoria IS NULL ORDER BY a.id DESC LIMIT $inicio,$limite;");
         return $consultaArchivos->result_id;
     }
 
@@ -80,8 +81,19 @@ class DashboardDB extends CI_model{
         $this->db->query("DELETE FROM carpeta WHERE ruta LIKE '$ruta%';");
     }
 
+    public function idCarpetaPath($path){
+        $consultaFolder = $this->db->query("SELECT * FROM carpeta WHERE ruta = '$path';");
+        $res = $consultaFolder->result();
+        return $res[0]->id;
+    }
+
     public function infoFoldersRuta($ruta){
-        $consultaArchivos = $this->db->query("SELECT * FROM carpeta WHERE ruta = '$ruta';");
+        $consultaArchivos = $this->db->query("SELECT * FROM carpeta WHERE ruta = '$ruta' AND id_categoria IS NULL;");
+        return $consultaArchivos->result_id;
+    }
+
+    public function infoFoldersRutaCat($ruta, $id_cat){
+        $consultaArchivos = $this->db->query("SELECT * FROM carpeta WHERE ruta = '$ruta' AND id_categoria = '$id_cat';");
         return $consultaArchivos->result_id;
     }
 
