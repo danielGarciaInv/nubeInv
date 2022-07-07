@@ -478,12 +478,14 @@ class Dashboard extends CI_Controller {
         echo "true";
     }
 
-    // Función para eliminar archivos del servidor
-    public function eliminarCarpeta(){
-        $ruta = $_POST['ruta'];
+    // Función para eliminar carpetas del servidor
+    public function eliminarCarpeta($id){
+        $consultaCarpeta = $this->DashboardDB->devolverCarpeta($id);
+        $ruta = $consultaCarpeta[0]->ruta;
         $this->rmDir_rf($ruta);
         $this->DashboardDB->eliminarArchivosDeCarpeta($ruta);
-        redirect('Dashboard');
+        
+        echo "true";
     }
 
     public function rmDir_rf($ruta){

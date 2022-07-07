@@ -50,14 +50,14 @@ document.addEventListener('DOMContentLoaded',()=>{
         datosArchivo = res;
     }); */
 
-
     /* ------------------------------------- Funciones ------------------------------------------ */
 
 
     // ----------------------- Para el slider
     // Función setPos: establece la posicion actual para el slider una vez que se dió click a una imagen
     function setPos(num){
-        pos = num-1;
+        pos = num;
+        console.log(pos);
     }
 
     // ----------------------- Para la subida "Asincrona" (En realidad la página si se va a recargar xd, pero es para la barra de progreso)
@@ -190,57 +190,50 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     // Escucha a cada boton de previsualizacion para activar el prev y establecer la posición inicial con la funcion setPos
-    /* for (let btnPre of btnsPrev) {
+    for (let btnPre of btnsPrev) {
         btnPre.addEventListener('click',()=>{
-            for (let elemento of datosArchivo) {
-                if(elemento.id == btnPre.id && elemento.tipo == '1'){
-                    var posPrev = 0;
-                    for (let imgPrev of contenedorMedia.children) {
-                        posPrev++;
-                        if(imgPrev.src.replace(url,'') == elemento.ruta){
-                            imgPrev.style.display = 'block';
-                            setPos(posPrev);
-                        }
-                    }
-                    preVisualizador.style.display = 'block';
-                }
+            setPos(btnPre.id);
+            for (let imgPrev of contenedorMedia.children) {
+                imgPrev.style.display = 'none';
             }
+            contenedorMedia.children[btnPre.id].style.display = 'block';
+            preVisualizador.style.display = 'block';
         });
-    } */
+    }
 
     // Escucha a los trigers de derecha e izquierda respectivamente para hacer el desplazamiento
-    /* derPrev.addEventListener('click',()=>{
+    derPrev.addEventListener('click',()=>{
         for (let imgPrev of contenedorMedia.children) {
             imgPrev.style.display = 'none';
         }
-        if(pos+1 > contenedorMedia.children.length-1){
+        if(pos >= contenedorMedia.children.length-1){
             contenedorMedia.children[0].style.display = 'block';
             pos = 0;
         }else{
-            contenedorMedia.children[pos+1].style.display = 'block';
             pos++;
+            contenedorMedia.children[pos].style.display = 'block';
         }
     });
     izqPrev.addEventListener('click',()=>{
         for (let imgPrev of contenedorMedia.children) {
             imgPrev.style.display = 'none';
         }
-        if(pos-1 < 0){
+        if(pos <= 0){
             contenedorMedia.children[contenedorMedia.children.length-1].style.display = 'block';
             pos = contenedorMedia.children.length-1;
         }else{
-            contenedorMedia.children[pos-1].style.display = 'block';
+            contenedorMedia.children[pos - 1].style.display = 'block';
             pos--;
         }
-    }); */
+    });
 
     // Escucha al botón para cerrar el previsualizador, lo oculta y a todas sus imagenes hijas tambien
-    /* btnCerrarPrev.addEventListener('click',()=>{
+    btnCerrarPrev.addEventListener('click',()=>{
         for (let imgPrev of contenedorMedia.children) {
             imgPrev.style.display = 'none';
         }
         preVisualizador.style.display = "none";
-    }); */
+    });
 
     // ----------------------- Para la subida "Asincrona"
     // Escucha al input de tipo file, cuando tenga archivos seleccionados se mostrará el punto rojo.

@@ -197,7 +197,7 @@
                                         </div>
                                         <div class="contOpciones" data-info-menu>
                                             <?php if($this->session->userdata('eliminar') === '1'):?>
-                                                <a href="<?= base_url()."index.php/Dashboard/confirmarEliminarCarpeta/".$folder['id']?>" class="btnEli">
+                                                <a onClick="eliminarCarpeta('<?= base_url()."index.php/Dashboard/eliminarCarpeta/".$folder['id']?>')" class="btnEli">
                                                     <p class="iconoFA"></p><p>Eliminar</p>
                                                 </a>
                                             <?php endif; ?>
@@ -208,12 +208,13 @@
                         </div>
                         
                         <div class="contenedorArchivos">
+                        <?php $indice = 0;?>
                             <?php foreach($archivos as $fila){?>
                                 <div class="contenedorPadding">
                                     <div class="contenedorArchivo">
-                                        <div class="miniaturaArchivo btnPrev" id="<?=$fila['id']?>">
+                                        <div class="miniaturaArchivo">
                                             <?php if($fila['tipo'] == '1') {?>
-                                                <img src="<?= base_url($fila['ruta'])?>" class="archivoImagen">
+                                                <img src="<?= base_url($fila['ruta'])?>" class="archivoImagen btnPrev" id="<?php echo $indice; $indice++;?>">
                                             <?php }else if($fila['tipo'] == '11'){?>
                                                 <p></p>
                                             <?php }else if($fila['tipo'] == '2'){?>
@@ -263,7 +264,7 @@
                         </div>
 
                         <?php if(isset($pagina)){?>
-                        <div class="container-fluid  col-12">
+                        <div class="container-fluid col-12" style="z-index: 0;">
                             <ul class="pagination pg-dark justify-content-center pb-5 pt-5 mb-0" style="float: none;" >
                                 <li class="page-item">
                                 <?php
@@ -331,6 +332,20 @@
         });
         const eliminarArchivo = (urlEliminar) => {
             let confirmar = confirm('¿Desea eliminar este Archivo?');
+            if(confirmar){
+                fetch(urlEliminar,{
+                    method: 'GET',
+                }).then(res => res.text()).then((respuesta) => {
+                    if(respuesta == 'true'){
+                        window.location.reload();
+                    }
+                });
+            }else{
+                return;
+            }
+        }
+        const eliminarCarpeta = (urlEliminar) => {
+            let confirmar = confirm('¿Desea eliminar esta Carpeta?\nSe perderá todo su contenido!');
             if(confirmar){
                 fetch(urlEliminar,{
                     method: 'GET',
