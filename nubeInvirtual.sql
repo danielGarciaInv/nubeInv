@@ -9,7 +9,7 @@ CREATE TABLE `archivo_cargado` (
   `tipo` tinyint(1) DEFAULT NULL,
   `fileType` varchar(4) DEFAULT NULL,
   `id_categoria` int(11) NOT NULL,
-  `id_carpeta` tinyint(1) DEFAULT NULL
+  `id_carpeta` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -18,7 +18,7 @@ CREATE TABLE `carpeta` (
   `id` int(11) NOT NULL,
   `nombre` varchar(255) NOT NULL,
   `ruta` varchar(255) NOT NULL,
-  `id_categoria` tinyint(1) DEFAULT NULL
+  `id_categoria` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
